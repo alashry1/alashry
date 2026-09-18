@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم | محمود العشري</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#F7F5F0;--surface:#FFF;--ink:#20242A;--muted:#6E747C;--brand:#B45309;--brand-2:#D97706;--brand-soft:#FBF0DF;--green:#16A34A;--green-soft:#E8F6EE;--line:#E8E4DB;--dark:#20242A;--red:#DC2626;--shadow:0 10px 30px rgba(32,36,42,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:.95rem;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;width:100%;outline:none;transition:.2s}
+input:focus,textarea:focus,select:focus{border-color:var(--brand)}
+label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
+.fg{margin-bottom:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:12px 22px;font-weight:600;font-size:.95rem;transition:.2s}
+.btn-y{background:var(--brand);color:#fff}.btn-y:hover{background:var(--brand-2)}
+.btn-g{background:var(--green);color:#fff}.btn-g:hover{filter:brightness(1.08)}
+.btn-o{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-o:hover{border-color:var(--brand)}
+.btn-r{background:#FDE8E8;color:var(--red);border:1px solid #F5C2C2}.btn-r:hover{background:var(--red);color:#fff}
+.btn-s{padding:7px 12px;font-size:.82rem;border-radius:9px}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:34px;max-width:430px;width:100%;box-shadow:var(--shadow)}
+.login-card h1{font-size:1.4rem;margin-bottom:6px;display:flex;gap:10px;align-items:center}
+.login-card h1 i{color:var(--brand)}
+.login-card .note{font-size:.8rem;color:var(--muted);background:var(--brand-soft);border:1px solid #F0DDBE;border-radius:10px;padding:8px 12px;margin:12px 0 18px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.topbar .t{font-weight:700;display:flex;align-items:center;gap:8px;margin-inline-end:auto}
+.topbar .t i{color:var(--brand)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px 0;max-width:1100px;margin:auto}
+.tab{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 16px;font-weight:600;font-size:.88rem;color:var(--muted);transition:.2s}
+.tab.on{background:var(--dark);color:#F5C36B;border-color:var(--dark)}
+.panel{max-width:1100px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h3{font-size:1.05rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h3 i{color:var(--brand)}
+.item{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:#FCFBF8}
+.item .hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.item .hd .nm{font-weight:700;font-size:.95rem;margin-inline-end:auto}
+.item .thumb{width:86px;height:60px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.hide-tag{background:#FDE8E8;color:var(--red);border-radius:8px;padding:2px 9px;font-size:.72rem;font-weight:700}
+.savebar{position:sticky;bottom:0;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center;gap:10px;z-index:40}
+.hint{font-size:.8rem;color:var(--muted);background:var(--green-soft);border:1px solid #CFE9D9;border-radius:10px;padding:9px 13px;margin-bottom:14px}
+#toast{position:fixed;bottom:24px;inset-inline-start:50%;transform:translateX(50%) translateY(90px);background:var(--dark);color:#F5C36B;padding:13px 26px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);transition:.4s;z-index:200;opacity:0}
+#toast.on{transform:translateX(50%) translateY(0);opacity:1}
+#modal{position:fixed;inset:0;background:rgba(18,20,24,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+#modal.on{display:flex}
+#modal .box{background:#fff;border-radius:18px;padding:26px;max-width:380px;width:100%;text-align:center}
+#modal .box p{margin-bottom:18px;font-weight:600}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.soc-preview{width:44px;height:44px;border-radius:50%;background:var(--dark);color:#F5C36B;display:inline-grid;place-items:center;font-size:1.2rem;vertical-align:middle}
+@media(max-width:640px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginView">
+  <form class="login-card" id="loginForm">
+    <h1><i class="fas fa-hard-hat"></i> لوحة تحكم محمود العشري</h1>
+    <div class="note">🔐 بيانات الوصول تُحفظ في جلسة المتصفح فقط وتُمسح بإغلاق التبويب. <b>التعديلات تصل الزوار تلقائياً بدون تحديث الصفحة خلال ≤25 ثانية.</b></div>
+    <div class="row2">
+      <div class="fg"><label>المالك (Owner)</label><input id="liOwner" required placeholder="abdul3ziz95"></div>
+      <div class="fg"><label>المستودع (Repo)</label><input id="liRepo" required value="alashry"></div>
+    </div>
+    <div class="fg"><label>فرع المستودع (Branch)</label><input id="liBranch" required value="main"></div>
+    <div class="fg"><label>توكن الوصول (Fine-grained PAT)</label><input id="liToken" type="password" required placeholder="github_pat_..."></div>
+    <button class="btn btn-y" style="width:100%" id="liBtn">دخول</button>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:12px">كيف أنشئ التوكن؟ GitHub → Settings → Developer settings → Fine-grained tokens → مستودع alashry فقط → صلاحية Contents: Read and write</p>
+  </form>
+</div>
+
+<div id="appView" style="display:none">
+  <div class="topbar">
+    <span class="t"><i class="fas fa-hard-hat"></i> لوحة تحكم العشري</span>
+    <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
+    <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
+    <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-t="identity">🧑 الهوية</button>
+    <button class="tab" data-t="services">🛠 الخدمات</button>
+    <button class="tab" data-t="gallery">🖼 المعرض</button>
+    <button class="tab" data-t="contact">📞 التواصل</button>
+    <button class="tab" data-t="texts">📝 النصوص والأرقام</button>
+    <button class="tab" data-t="wamsg">💬 رسائل الواتساب</button>
+  </div>
+  <div class="panel">
+    <div id="sec-identity"></div>
+    <div id="sec-services" style="display:none"></div>
+    <div id="sec-gallery" style="display:none"></div>
+    <div id="sec-contact" style="display:none"></div>
+    <div id="sec-texts" style="display:none"></div>
+    <div id="sec-wamsg" style="display:none"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="modal"><div class="box"><p id="modalMsg"></p><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-r" id="modalYes">تأكيد</button><button class="btn btn-o" id="modalNo">إلغاء</button></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+let S={owner:'',repo:'',branch:'',token:''};
+let CFG=null,RAW='',SHA='';
+let pending={};
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3200)}
+function confirmBox(msg){return new Promise(res=>{
+  $('#modalMsg').textContent=msg;$('#modal').classList.add('on');
+  $('#modalYes').onclick=()=>{$('#modal').classList.remove('on');res(true)};
+  $('#modalNo').onclick=()=>{$('#modal').classList.remove('on');res(false)};
+})}
+const api=(path,opt={})=>fetch(`https://api.github.com/repos/${S.owner}/${S.repo}/contents/${path}`,{
+  ...opt,headers:{Authorization:`Bearer ${S.token}`,Accept:'application/vnd.github+json','Content-Type':'application/json',...(opt.headers||{})}});
+const b64dec=b=>{const bin=atob(b.replace(/\s/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)};
+const b64enc=s=>{const u=new TextEncoder().encode(s);let bin='';for(let i=0;i<u.length;i++)bin+=String.fromCharCode(u[i]);return btoa(bin)};
+
+async function fetchIndex(){
+  const r=await api('index.html?ref='+S.branch);
+  if(r.status===401)throw new Error('TOKEN');
+  if(!r.ok)throw new Error('قراءة index.html فشلت ('+r.status+')');
+  const j=await r.json();
+  return{raw:b64dec(j.content),sha:j.sha};
+}
+function parseConfig(raw){
+  const m=raw.match(/<!--✂️EDIT:CONFIG:START-->([\s\S]*?)<!--✂️EDIT:CONFIG:END-->/);
+  if(!m)throw new Error('ملف index.html لا يحتوي المناطق المُعلَّمة — ارفع النسخة الجديدة أولاً');
+  const jm=m[1].match(/<script type="application\/json" id="site-config">([\s\S]*?)<\/script>/);
+  return JSON.parse(jm[1]);
+}
+function setRegion(raw,key,inner){
+  const re=new RegExp(`(<!--✂️EDIT:${key}:START-->)[\\s\\S]*?(<!--✂️EDIT:${key}:END-->)`);
+  if(!re.test(raw))throw new Error('منطقة '+key+' مفقودة من الملف');
+  return raw.replace(re,(m,a,b)=>a+'\n'+inner+'\n'+b);
+}
+function compress(file,maxW=1600,q=0.8){return new Promise((res,rej)=>{
+  const rd=new FileReader();
+  rd.onload=()=>{const img=new Image();
+    img.onload=()=>{let w=img.width,h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      const d=c.toDataURL('image/jpeg',q);
+      res({b64:d.split(',')[1],preview:d});
+    };
+    img.onerror=rej;img.src=rd.result};
+  rd.onerror=rej;rd.readAsDataURL(file);
+})}
+
+const ICONS={wa:'fab fa-whatsapp',phone:'fas fa-phone',email:'fas fa-envelope',instagram:'fab fa-instagram',x:'fab fa-x-twitter',tiktok:'fab fa-tiktok',snapchat:'fab fa-snapchat',facebook:'fab fa-facebook-f',location:'fas fa-location-dot',website:'fas fa-globe',clock:'fas fa-clock',youtube:'fab fa-youtube',linkedin:'fab fa-linkedin-in',telegram:'fab fa-telegram',threads:'fab fa-threads',pinterest:'fab fa-pinterest',reddit:'fab fa-reddit'};
+const SOCIAL_ICONS={tiktok:'fab fa-tiktok',facebook:'fab fa-facebook-f',instagram:'fab fa-instagram','x-twitter':'fab fa-x-twitter',snapchat:'fab fa-snapchat',youtube:'fab fa-youtube',linkedin:'fab fa-linkedin-in',telegram:'fab fa-telegram',threads:'fab fa-threads',whatsapp:'fab fa-whatsapp',pinterest:'fab fa-pinterest',reddit:'fab fa-reddit'};
+
+/* ===== مولّدات المناطق ===== */
+function genHero(c){
+  const w=c.brand.name.split(' ');
+  const h1=w.length>1?`${w[0]} <span>${esc(w.slice(1).join(' '))}</span>`:esc(c.brand.name);
+  return `    <div class="pcard">
+      <div class="ph-frame">
+        <img src="images/profile.jpg?v=${c.brand.profileV||1}" alt="${esc(c.brand.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph"><i class="fas fa-hard-hat"></i>ضع صورتك هنا<br>images/profile.jpg</div>
+      </div>
+      <span class="tag"><i class="fas fa-award"></i> خبرة +${esc(c.brand.exp)} سنوات</span>
+    </div>
+    <span class="badge"><i class="fas fa-hard-hat"></i> ${esc(c.brand.badge)}</span>
+    <h1>${h1}</h1>
+    <p>${esc(c.brand.tagline)}</p>
+    <div class="hero-btns">
+      <a data-wa-general class="btn btn-wa" href="https://wa.me/${c.contact.wa}" target="_blank"><i class="fab fa-whatsapp"></i> اطلب خدمة عبر واتساب</a>
+      <a href="tel:${c.contact.phone}" class="btn btn-ghost"><i class="fas fa-phone"></i> ${esc(c.contact.phone)}</a>
+    </div>
+    <div class="chips">
+      <span><i class="fas fa-circle-check"></i>التزام بالمواعيد</span>
+      <span><i class="fas fa-circle-check"></i>ضمان على العمل</span>
+      <span><i class="fas fa-circle-check"></i>أسعار منافسة</span>
+    </div>`;
+}
+function genServices(c){
+  return c.services.filter(s=>!s.hidden).map(s=>{
+    const bn=(s.img||'').split('/').pop();
+    return `      <div class="srv reveal">
+        <div class="srv-img"><img src="${s.img}?v=${s.v||1}" alt="${esc(s.title)}" onerror="ph(this)"><div class="g-ph"><i class="fas fa-camera"></i>ضع صورة الخدمة<br>${esc(bn)}</div><span class="srv-ico"><i class="${s.icon}"></i></span></div>
+        <h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p>
+        <a class="order" data-service="${esc(s.title)}" data-desc="${esc(s.desc)}" href="https://wa.me/${c.contact.wa}" target="_blank"><i class="fab fa-whatsapp"></i> اطلب الخدمة</a>
+      </div>`;
+  }).join('\n');
+}
+function genGallery(c){
+  return c.gallery.map(g=>{
+    const bn=(g.img||'').split('/').pop();
+    return `        <figure class="sl-slide"><img src="${g.img}?v=${g.v||1}" alt="${esc(g.tag)}" draggable="false" onerror="ph(this)"><div class="g-ph"><i class="fas fa-camera"></i>ضع صورتك هنا<br>${esc(bn)}</div><span class="sl-zoom"><i class="fas fa-magnifying-glass-plus"></i></span><figcaption class="sl-cap">${esc(g.cap)} <b>${esc(g.tag)}</b></figcaption></figure>`;
+  }).join('\n');
+}
+function genAbout(c){
+  return `      <div class="reveal">
+        <p>${esc(c.about.p1)}</p>
+        <p>${esc(c.about.p2)}</p>
+        <ul class="feat">
+          ${c.about.features.map(f=>`<li><i class="fas fa-circle-check"></i> ${esc(f)}</li>`).join('\n          ')}
+        </ul>
+      </div>
+      <div class="stats reveal">
+        ${c.about.stats.map(s=>`<div><div class="n" data-count="${s.n}">0</div><div class="l">${esc(s.l)}</div></div>`).join('\n        ')}
+      </div>`;
+}
+function genContact(c){
+  let h=`      <a class="c-item" data-wa-general href="https://wa.me/${c.contact.wa}" target="_blank"><div class="ic"><i class="fab fa-whatsapp"></i></div><div><b>واتساب</b><span>${esc(c.contact.phone)}</span></div></a>
+      <a class="c-item" href="tel:${c.contact.phone}"><div class="ic"><i class="fas fa-phone"></i></div><div><b>اتصال مباشر</b><span>${esc(c.contact.phone)}</span></div></a>
+      <a class="c-item" href="mailto:${c.contact.email}"><div class="ic"><i class="fas fa-envelope"></i></div><div><b>البريد الإلكتروني</b><span>${esc(c.contact.email)}</span></div></a>`;
+  (c.contact.extra||[]).forEach(x=>{
+    h+=`\n      <a class="c-item" href="${esc(x.value)}" target="_blank"><div class="ic"><i class="${ICONS[x.type]||'fas fa-link'}"></i></div><div><b>${esc(x.label)}</b><span>${esc(x.value)}</span></div></a>`;
+  });
+  return h;
+}
+function genSocial(c){
+  const s=c.social||[];
+  if(!s.length)return '';
+  let h=`    <div class="social-divider"><span>تابعنا على</span></div>
+    <div class="social-icons">
+`;
+  s.forEach(x=>{h+=`      <a href="${esc(x.url)}" target="_blank" rel="noopener" aria-label="${esc(x.type)}" data-type="${esc(x.type)}"><i class="${SOCIAL_ICONS[x.type]||'fas fa-link'}"></i></a>\n`});
+  h+=`    </div>`;
+  return h;
+}
+const configInner=c=>`<script type="application/json" id="site-config">\n${JSON.stringify(c,null,2)}\n<\/script>`;
+
+/* ===== رفع الملفات ===== */
+async function putFile(path,b64,msg){
+  let sha;
+  const g=await api(path+'?ref='+S.branch);
+  if(g.ok)sha=(await g.json()).sha;
+  const r=await api(path,{method:'PUT',body:JSON.stringify({message:msg||(`لوحة التحكم: رفع صورة ${path}`),content:b64,branch:S.branch,...(sha?{sha}:{})})});
+  if(!r.ok)throw new Error('رفع الصورة فشل: '+path);
+}
+
+/* ===== ★ النشر: index.html + data/site.json للتحديث الفوري ★ ===== */
+async function publish(newCfg){
+  try{
+    document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=true);
+    newCfg._updated=Date.now();
+    const fresh=await fetchIndex();
+    const old=parseConfig(fresh.raw);
+    let raw=fresh.raw;
+    const reps=[[old.brand.name,newCfg.brand.name],[old.contact.phone,newCfg.contact.phone],[old.contact.wa,newCfg.contact.wa],[old.contact.email,newCfg.contact.email],[old.brand.tagline,newCfg.brand.tagline]];
+    reps.forEach(([o,n])=>{if(o&&n&&o!==n)raw=raw.split(o).join(n)});
+    raw=setRegion(raw,'CONFIG',configInner(newCfg));
+    raw=setRegion(raw,'HERO',genHero(newCfg));
+    raw=setRegion(raw,'SERVICES',genServices(newCfg));
+    raw=setRegion(raw,'GALLERY',genGallery(newCfg));
+    raw=setRegion(raw,'ABOUT',genAbout(newCfg));
+    raw=setRegion(raw,'CONTACT',genContact(newCfg));
+    raw=setRegion(raw,'SOCIAL',genSocial(newCfg));
+    for(const p of Object.keys(pending))await putFile(p,pending[p]);
+    pending={};
+    const r=await api('index.html',{method:'PUT',body:JSON.stringify({message:'لوحة التحكم: حفظ ونشر تحديثات الموقع',content:b64enc(raw),sha:fresh.sha,branch:S.branch})});
+    if(r.status===401)throw new Error('TOKEN');
+    if(!r.ok)throw new Error('الحفظ فشل ('+r.status+')');
+    await putFile('data/site.json',b64enc(JSON.stringify(newCfg,null,2)),'لوحة التحكم: تحديث ملف البث المباشر');
+    RAW=raw;SHA=fresh.sha;CFG=newCfg;
+    toast('✅ تم الحفظ والنشر — يصل الزوار تلقائياً بدون تحديث خلال ≤25 ثانية');
+    renderAll();
+  }catch(e){
+    if(e.message==='TOKEN'){toast('⚠️ انتهت صلاحية التوكن — سجّل دخول من جديد');logout()}
+    else{toast('❌ '+e.message);console.error(e)}
+  }finally{document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=false)}
+}
+
+/* ===== أقسام اللوحة ===== */
+function renderIdentity(){
+  const b=CFG.brand;
+  $('#sec-identity').innerHTML=`
+  <div class="card"><h3><i class="fas fa-id-card"></i> الهوية والاسم</h3>
+    <div class="hint">تغيير الاسم ينعكس تلقائياً على: الناف بار، الواجهة، الفوتر، عن المقاول، رسائل الواتساب، عنوان التبويب ومعاينة مشاركة واتساب.</div>
+    <div class="fg"><label>الاسم الكامل</label><input id="iName" value="${esc(b.name)}"></div>
+    <div class="fg"><label>الشارة (سطر المهنة)</label><input id="iBadge" value="${esc(b.badge)}"></div>
+    <div class="fg"><label>الجملة التعريفية</label><input id="iTag" value="${esc(b.tagline)}"></div>
+    <div class="row2">
+      <div class="fg"><label>سنوات الخبرة</label><input id="iExp" type="number" min="0" value="${esc(b.exp)}"></div>
+      <div class="fg"><label>صورة البروفايل الحالية</label><img src="images/profile.jpg?v=${b.profileV||1}" style="border-radius:10px;max-height:90px" onerror="this.style.display='none'"></div>
+    </div>
+    <div class="fg"><label>رفع صورة شخصية جديدة</label><input type="file" accept="image/*" id="iProfile"></div>
+    <div class="fg"><label>رفع بانر مشاركة واتساب جديد</label><input type="file" accept="image/*" id="iBanner"></div>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveIdentity()"><i class="fas fa-save"></i> حفظ ونشر الهوية</button></div>`;
+  $('#iProfile').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1200,.82);pending['images/profile.jpg']=r.b64;CFG.brand.profileV=Date.now();toast('📎 الصورة جاهزة — اضغط حفظ ونشر')};
+  $('#iBanner').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1600,.82);pending['images/og-banner.jpg']=r.b64;toast('📎 البانر جاهز — اضغط حفظ ونشر')};
+}
+function svcRow(s,i){
+  return `<div class="item" data-i="${i}">
+    <div class="hd">
+      <img class="thumb" src="${s.img}?v=${s.v||1}" onerror="this.style.display='none'">
+      <span class="nm">${esc(s.title)}</span>
+      ${s.hidden?'<span class="hide-tag">مخفي</span>':''}
+      <div class="ctl">
+        <button class="btn btn-o btn-s" onclick="moveSvc(${i},0)" title="عرض أولاً"><i class="fas fa-angles-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveSvc(${i},-1)"><i class="fas fa-arrow-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveSvc(${i},1)"><i class="fas fa-arrow-down"></i></button>
+        <button class="btn btn-o btn-s" onclick="toggleSvc(${i})">${s.hidden?'👁 إظهار':'🙈 إخفاء'}</button>
+        <button class="btn btn-r btn-s" onclick="delSvc(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>العنوان</label><input data-f="title" value="${esc(s.title)}"></div>
+      <div class="fg"><label>الأيقونة (FontAwesome)</label><input data-f="icon" value="${esc(s.icon)}"></div>
+    </div>
+    <div class="fg"><label>الوصف</label><input data-f="desc" value="${esc(s.desc)}"></div>
+    <div class="fg"><label>تغيير صورة الخدمة</label><input type="file" accept="image/*" data-f="img"></div>
+  </div>`;
+}
+function renderServices(){
+  $('#sec-services').innerHTML=`
+  <div class="card"><h3><i class="fas fa-screwdriver-wrench"></i> الخدمات (${CFG.services.length})</h3>
+    <div class="hint">⤒ عرض أولاً • ↑↓ ترتيب • الإخفاء يخفيها من الموقع بدون حذف • تغيير الصورة يُرفع تلقائياً بنفس اسم الملف.</div>
+    <div id="svcList">${CFG.services.map(svcRow).join('')}</div>
+    <button class="btn btn-o" onclick="addSvc()"><i class="fas fa-plus"></i> إضافة خدمة جديدة</button>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveServices()"><i class="fas fa-save"></i> حفظ ونشر الخدمات</button></div>`;
+  $('#svcList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    it.querySelector('[data-f="img"]').onchange=async e=>{
+      if(!e.target.files[0])return;
+      const r=await compress(e.target.files[0]);
+      pending[CFG.services[i].img]=r.b64;
+      CFG.services[i].v=Date.now();
+      it.querySelector('.thumb').src=r.preview;
+      toast('📎 الصورة جاهزة — اضغط حفظ ونشر');
+    };
+  });
+}
+function collectServices(){
+  $('#svcList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    CFG.services[i].title=it.querySelector('[data-f="title"]').value;
+    CFG.services[i].desc=it.querySelector('[data-f="desc"]').value;
+    CFG.services[i].icon=it.querySelector('[data-f="icon"]').value||'fas fa-hammer';
+  });
+}
+window.moveSvc=(i,d)=>{collectServices();
+  if(d===0){const s=CFG.services.splice(i,1)[0];CFG.services.unshift(s)}
+  else{const j=i+d;if(j<0||j>=CFG.services.length)return;const a=CFG.services;[a[i],a[j]]=[a[j],a[i]]}
+  renderServices()};
+window.toggleSvc=i=>{collectServices();CFG.services[i].hidden=!CFG.services[i].hidden;renderServices()};
+window.delSvc=async i=>{collectServices();
+  if(!await confirmBox('حذف خدمة «'+CFG.services[i].title+'» نهائياً؟'))return;
+  CFG.services.splice(i,1);renderServices()};
+window.addSvc=()=>{collectServices();
+  const ts=Date.now();
+  CFG.services.push({id:'new'+ts,icon:'fas fa-hammer',title:'خدمة جديدة',desc:'وصف الخدمة...',img:`images/srv-${ts}.jpg`,v:'1',hidden:false});
+  renderServices();toast('➕ أضفت خدمة — عدّل بياناتها وارفع صورتها ثم احفظ')};
+function saveServices(){collectServices();publish(structuredClone(CFG))}
+window.saveServices=saveServices;
+
+function galRow(g,i){
+  return `<div class="item" data-i="${i}">
+    <div class="hd">
+      <img class="thumb" src="${g.img}?v=${g.v||1}" onerror="this.style.display='none'">
+      <span class="nm">${esc(g.cap)}</span>
+      <div class="ctl">
+        <button class="btn btn-o btn-s" onclick="moveGal(${i},0)" title="عرض أولاً"><i class="fas fa-angles-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveGal(${i},-1)"><i class="fas fa-arrow-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveGal(${i},1)"><i class="fas fa-arrow-down"></i></button>
+        <button class="btn btn-r btn-s" onclick="delGal(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>التعليق</label><input data-f="cap" value="${esc(g.cap)}"></div>
+      <div class="fg"><label>التصنيف</label><input data-f="tag" value="${esc(g.tag)}"></div>
+    </div>
+    <div class="fg"><label>استبدال الصورة</label><input type="file" accept="image/*" data-f="img"></div>
+  </div>`;
+}
+function renderGallery(){
+  $('#sec-gallery').innerHTML=`
+  <div class="card"><h3><i class="fas fa-images"></i> معرض الصور (${CFG.gallery.length})</h3>
+    <div class="hint">أضف صور مواقعك الحقيقية — تُرفع وتظهر في الشريط المنزلق فور الحفظ. ⤒ لعرض الصورة أولاً.</div>
+    <div id="galList">${CFG.gallery.map(galRow).join('')}</div>
+    <div class="item" style="background:var(--brand-soft)">
+      <h3 style="margin-bottom:10px"><i class="fas fa-plus"></i> إضافة صورة جديدة</h3>
+      <div class="row2">
+        <div class="fg"><label>التعليق</label><input id="nCap" placeholder="مثال: تشطيب فيلا بالرياض"></div>
+        <div class="fg"><label>التصنيف</label><input id="nTag" placeholder="مثال: لياسة"></div>
+      </div>
+      <div class="fg"><label>الصورة</label><input type="file" accept="image/*" id="nImg"></div>
+      <button class="btn btn-y btn-s" onclick="addGal()"><i class="fas fa-plus"></i> إضافة للمعرض</button>
+    </div>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveGallery()"><i class="fas fa-save"></i> حفظ ونشر المعرض</button></div>`;
+  $('#galList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    it.querySelector('[data-f="img"]').onchange=async e=>{
+      if(!e.target.files[0])return;
+      const r=await compress(e.target.files[0]);
+      pending[CFG.gallery[i].img]=r.b64;CFG.gallery[i].v=Date.now();
+      it.querySelector('.thumb').src=r.preview;toast('📎 جاهزة — اضغط حفظ ونشر');
+    };
+  });
+}
+function collectGallery(){
+  $('#galList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    CFG.gallery[i].cap=it.querySelector('[data-f="cap"]').value;
+    CFG.gallery[i].tag=it.querySelector('[data-f="tag"]').value;
+  });
+}
+window.addGal=async()=>{
+  const f=$('#nImg').files[0];
+  if(!f||!$('#nCap').value){toast('❌ اختر صورة واكتب تعليقاً');return}
+  collectGallery();
+  const r=await compress(f);
+  const path=`images/gal-${Date.now()}.jpg`;
+  pending[path]=r.b64;
+  CFG.gallery.push({cap:$('#nCap').value,tag:$('#nTag').value||'عام',img:path,v:'1'});
+  renderGallery();toast('➕ أُضيفت للقائمة — اضغط حفظ ونشر');
+};
+window.moveGal=(i,d)=>{collectGallery();
+  if(d===0){const g=CFG.gallery.splice(i,1)[0];CFG.gallery.unshift(g)}
+  else{const j=i+d;if(j<0||j>=CFG.gallery.length)return;const a=CFG.gallery;[a[i],a[j]]=[a[j],a[i]]}
+  renderGallery()};
+window.delGal=async i=>{collectGallery();
+  if(!await confirmBox('حذف هذه الصورة من المعرض؟'))return;
+  CFG.gallery.splice(i,1);renderGallery()};
+function saveGallery(){collectGallery();publish(structuredClone(CFG))}
+window.saveGallery=saveGallery;
+
+function socRow(s,i){
+  const icon=SOCIAL_ICONS[s.type]||'fas fa-link';
+  return `<div class="item" data-i="${i}">
+    <div class="hd">
+      <span class="soc-preview"><i class="${icon}"></i></span>
+      <span class="nm">${esc(s.type)}</span>
+      <div class="ctl">
+        <button class="btn btn-o btn-s" onclick="moveSoc(${i},0)" title="عرض أولاً"><i class="fas fa-angles-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveSoc(${i},-1)"><i class="fas fa-arrow-up"></i></button>
+        <button class="btn btn-o btn-s" onclick="moveSoc(${i},1)"><i class="fas fa-arrow-down"></i></button>
+        <button class="btn btn-r btn-s" onclick="delSoc(${i})"><i class="fas fa-trash"></i> حذف</button>
+      </div>
+    </div>
+    <div class="fg"><label>الرابط</label><input data-f="url" value="${esc(s.url)}"></div>
+  </div>`;
+}
+function renderContact(){
+  const c=CFG.contact;
+  $('#sec-contact').innerHTML=`
+  <div class="card"><h3><i class="fas fa-headset"></i> وسائل الاتصال</h3>
+    <div class="hint">واتساب: مفتاح الدولة ثم الرقم بدون + وبدون صفر بداية — مثال 9665XXXXXXXX</div>
+    <div class="row2">
+      <div class="fg"><label>رقم الجوال الظاهر</label><input id="cPhone" value="${esc(c.phone)}"></div>
+      <div class="fg"><label>رقم الواتساب (دولي)</label><input id="cWa" value="${esc(c.wa)}"></div>
+    </div>
+    <div class="fg"><label>البريد الإلكتروني</label><input id="cEmail" value="${esc(c.email)}"></div>
+    <h3 style="margin-top:18px"><i class="fas fa-plus"></i> وسائل إضافية</h3>
+    <div id="exList">${(c.extra||[]).map((x,i)=>`
+      <div class="item" data-i="${i}">
+        <div class="row2">
+          <div class="fg"><label>النوع</label><select data-f="type">${Object.keys(ICONS).map(k=>`<option value="${k}" ${k===x.type?'selected':''}>${k}</option>`).join('')}</select></div>
+          <div class="fg"><label>التسمية</label><input data-f="label" value="${esc(x.label)}"></div>
+        </div>
+        <div class="fg"><label>الرابط / القيمة</label><input data-f="value" value="${esc(x.value)}"></div>
+        <button class="btn btn-r btn-s" onclick="delEx(${i})"><i class="fas fa-trash"></i> حذف</button>
+      </div>`).join('')}</div>
+    <button class="btn btn-o btn-s" onclick="addEx()"><i class="fas fa-plus"></i> إضافة وسيلة تواصل</button>
+  </div>
+  <div class="card"><h3><i class="fas fa-share-nodes"></i> حسابات التواصل الاجتماعي</h3>
+    <div class="hint">تظهر كأيقونات تحت بطاقات الاتصال بعنوان «تابعنا على» — اختر المنصة والصق الرابط فقط.</div>
+    <div id="socList">${(c.social||[]).map(socRow).join('')}</div>
+    <div class="item" style="background:var(--brand-soft)">
+      <h3 style="margin-bottom:10px"><i class="fas fa-plus"></i> إضافة حساب جديد</h3>
+      <div class="row2">
+        <div class="fg"><label>المنصة</label><select id="nSocType">${Object.keys(SOCIAL_ICONS).map(k=>`<option value="${k}">${k}</option>`).join('')}</select></div>
+        <div class="fg"><label>الرابط</label><input id="nSocUrl" placeholder="https://..."></div>
+      </div>
+      <button class="btn btn-y btn-s" onclick="addSoc()"><i class="fas fa-plus"></i> إضافة الحساب</button>
+    </div>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveContact()"><i class="fas fa-save"></i> حفظ ونشر التواصل والسوشيال</button></div>`;
+}
+function collectContact(){
+  CFG.contact.phone=$('#cPhone').value.trim();
+  CFG.contact.wa=$('#cWa').value.trim();
+  CFG.contact.email=$('#cEmail').value.trim();
+  CFG.contact.extra=CFG.contact.extra||[];
+  $('#exList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    CFG.contact.extra[i]={type:it.querySelector('[data-f="type"]').value,label:it.querySelector('[data-f="label"]').value,value:it.querySelector('[data-f="value"]').value};
+  });
+  CFG.contact.social=CFG.contact.social||[];
+  $('#socList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    CFG.contact.social[i].url=it.querySelector('[data-f="url"]').value;
+  });
+}
+window.addEx=()=>{collectContact();CFG.contact.extra.push({type:'instagram',label:'انستقرام',value:'https://'});renderContact()};
+window.delEx=i=>{collectContact();CFG.contact.extra.splice(i,1);renderContact()};
+window.addSoc=()=>{
+  const url=$('#nSocUrl').value.trim();
+  if(!url){toast('❌ أدخل رابط الحساب');return}
+  collectContact();
+  CFG.contact.social.push({type:$('#nSocType').value,url:url});
+  renderContact();toast('➕ أُضيف الحساب — اضغط حفظ ونشر');
+};
+window.moveSoc=(i,d)=>{collectContact();
+  if(d===0){const s=CFG.contact.social.splice(i,1)[0];CFG.contact.social.unshift(s)}
+  else{const j=i+d;if(j<0||j>=CFG.contact.social.length)return;const a=CFG.contact.social;[a[i],a[j]]=[a[j],a[i]]}
+  renderContact()};
+window.delSoc=async i=>{collectContact();
+  if(!await confirmBox('حذف هذا الحساب؟'))return;
+  CFG.contact.social.splice(i,1);renderContact()};
+function saveContact(){collectContact();publish(structuredClone(CFG))}
+window.saveContact=saveContact;
+
+function renderTexts(){
+  const a=CFG.about;
+  $('#sec-texts').innerHTML=`
+  <div class="card"><h3><i class="fas fa-align-right"></i> نصوص «عن المقاول»</h3>
+    <div class="fg"><label>الفقرة الأولى</label><textarea id="tP1" rows="3">${esc(a.p1)}</textarea></div>
+    <div class="fg"><label>الفقرة الثانية</label><textarea id="tP2" rows="2">${esc(a.p2)}</textarea></div>
+    <div class="fg"><label>المميزات (سطر لكل ميزة)</label><textarea id="tFeat" rows="4">${esc(a.features.join('\n'))}</textarea></div>
+  </div>
+  <div class="card"><h3><i class="fas fa-chart-simple"></i> أرقام الإحصائيات</h3>
+    <div id="stList">${a.stats.map((s,i)=>`
+      <div class="row2 item" data-i="${i}" style="margin-bottom:8px">
+        <div class="fg"><label>الرقم</label><input type="number" data-f="n" value="${s.n}"></div>
+        <div class="fg"><label>الوصف</label><input data-f="l" value="${esc(s.l)}"></div>
+      </div>`).join('')}</div>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveTexts()"><i class="fas fa-save"></i> حفظ ونشر النصوص</button></div>`;
+}
+function saveTexts(){
+  CFG.about.p1=$('#tP1').value;CFG.about.p2=$('#tP2').value;
+  CFG.about.features=$('#tFeat').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  $('#stList').querySelectorAll('.item').forEach(it=>{
+    const i=+it.dataset.i;
+    CFG.about.stats[i].n=+it.querySelector('[data-f="n"]').value||0;
+    CFG.about.stats[i].l=it.querySelector('[data-f="l"]').value;
+  });
+  publish(structuredClone(CFG));
+}
+window.saveTexts=saveTexts;
+
+function renderWa(){
+  const w=CFG.waMsg;
+  $('#sec-wamsg').innerHTML=`
+  <div class="card"><h3><i class="fab fa-whatsapp"></i> قالب رسائل الواتساب</h3>
+    <div class="fg"><label>التحية</label><input id="wG" value="${esc(w.greeting)}"></div>
+    <div class="fg"><label>التوقيع</label><input id="wS" value="${esc(w.sign)}"></div>
+    <div class="fg"><label>السطر الختامي</label><input id="wC" value="${esc(w.close)}"></div>
+    <label>معاينة حية</label>
+    <pre id="wPrev" style="background:var(--dark);color:#E8E6E1;border-radius:12px;padding:14px;font-family:inherit;font-size:.85rem;white-space:pre-wrap"></pre>
+  </div>
+  <div class="savebar"><button class="btn btn-g" onclick="saveWa()"><i class="fas fa-save"></i> حفظ ونشر الرسائل</button></div>`;
+  const upd=()=>{$('#wPrev').textContent=`${$('#wG').value}\n\n${$('#wS').value}\n\nأرغب بطلب الخدمة التالية:\n🛠️ الخدمة: عمال لياسة\n📋 الوصف: ...\n\n📍 الموقع: ...\n📅 موعد المعاينة: ...\n\n${$('#wC').value}`};
+  ['wG','wS','wC'].forEach(id=>$('#'+id).addEventListener('input',upd));upd();
+}
+function saveWa(){
+  CFG.waMsg={greeting:$('#wG').value,sign:$('#wS').value,close:$('#wC').value};
+  publish(structuredClone(CFG));
+}
+window.saveWa=saveWa;
+
+function saveIdentity(){
+  CFG.brand.name=$('#iName').value.trim()||CFG.brand.name;
+  CFG.brand.badge=$('#iBadge').value;
+  CFG.brand.tagline=$('#iTag').value;
+  CFG.brand.exp=$('#iExp').value;
+  CFG.waMsg.sign='أ: '+CFG.brand.name;
+  const ys=CFG.about.stats.find(s=>s.l.includes('سنوات خبرة'));
+  if(ys)ys.n=+CFG.brand.exp||0;
+  publish(structuredClone(CFG));
+}
+window.saveIdentity=saveIdentity;
+
+function renderAll(){renderIdentity();renderServices();renderGallery();renderContact();renderTexts();renderWa()}
+
+function logout(){sessionStorage.clear();location.reload()}
+$('#btnLogout').onclick=logout;
+$('#btnExport').onclick=()=>{
+  const b=new Blob([RAW],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='index-backup.html';a.click();
+  toast('⬇️ نُزّلت نسخة احتياطية من index.html');
+};
+$('#btnReload').onclick=async()=>{
+  try{const f=await fetchIndex();RAW=f.raw;SHA=f.sha;CFG=parseConfig(RAW);renderAll();toast('🔄 تم التحديث من المستودع')}
+  catch(e){toast('❌ '+e.message)}
+};
+$('#tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(!t)return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  ['identity','services','gallery','contact','texts','wamsg'].forEach(k=>{$('#sec-'+k).style.display=(k===t.dataset.t)?'':'none'});
+});
+$('#loginForm').onsubmit=async e=>{
+  e.preventDefault();
+  S={owner:$('#liOwner').value.trim(),repo:$('#liRepo').value.trim(),branch:$('#liBranch').value.trim(),token:$('#liToken').value.trim()};
+  $('#liBtn').innerHTML='<span class="spin"></span> جارٍ التحقق...';
+  try{
+    const f=await fetchIndex();
+    RAW=f.raw;SHA=f.sha;CFG=parseConfig(RAW);
+    sessionStorage.setItem('ap',JSON.stringify(S));
+    enterApp();
+  }catch(err){
+    toast('❌ '+(err.message==='TOKEN'?'التوكن غير صالح أو منتهي':'تعذر الاتصال — تحقق من البيانات'));
+    $('#liBtn').textContent='دخول';
+  }
+};
+function enterApp(){
+  $('#loginView').style.display='none';$('#appView').style.display='';
+  renderAll();toast('👋 أهلاً بك — التعديلات تُحفظ بالملفات وتصل الزوار بدون تحديث');
+}
+(function init(){
+  const s=sessionStorage.getItem('ap');
+  if(s){S=JSON.parse(s);
+    fetchIndex().then(f=>{RAW=f.raw;SHA=f.sha;CFG=parseConfig(RAW);enterApp()})
+    .catch(()=>{sessionStorage.clear()});
+  }
+})();
+</script>
+</body>
+</html>
