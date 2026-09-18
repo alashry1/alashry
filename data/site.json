@@ -1,0 +1,184 @@
+{
+  "v": 1,
+  "_updated": 1789767980331,
+  "brand": {
+    "name": "محمود العشري  احمد",
+    "badge": "مقاول توريد عمال — السعودية",
+    "tagline": "فريق عمال مدرّب لكل أعمال البناء والتشطيبات — اتصال واحد ونوصلك.",
+    "exp": "3",
+    "profileV": "1"
+  },
+  "contact": {
+    "phone": "0565157795",
+    "wa": "966565157795",
+    "email": "elashrymahmuod901@gmail.com",
+    "extra": []
+  },
+  "social": [
+    {
+      "type": "tiktok",
+      "url": "https://www.tiktok.com/@mahmoudelashry707"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/100014560241096"
+    }
+  ],
+  "waMsg": {
+    "greeting": "السلام عليكم 👋",
+    "sign": "أ: محمود العشري  احمد",
+    "close": "✨ بانتظار تواصلكم الكريم"
+  },
+  "about": {
+    "p1": "أشتغل بالمقاولات وتوريد العمالة منذ أكثر من 3 سنوات، مع فريق من المعلمين والعمال المدرّبين في كل التخصصات.",
+    "p2": "مبدئي بسيط: شغل نظيف، موعد مضبوط، وسعر عادل.",
+    "features": [
+      "عمالة مدرّبة ومجرّبة",
+      "وصول سريع للموقع",
+      "ضمان على التنفيذ",
+      "متاح 24/7"
+    ],
+    "stats": [
+      {
+        "n": 120,
+        "l": "عميل سعيد"
+      },
+      {
+        "n": 180,
+        "l": "مشروع منجز"
+      },
+      {
+        "n": 40,
+        "l": "عامل مدرّب"
+      },
+      {
+        "n": 3,
+        "l": "سنوات خبرة"
+      }
+    ]
+  },
+  "services": [
+    {
+      "id": "lyasa",
+      "icon": "fas fa-trowel",
+      "title": "عمال لياسة",
+      "desc": "لياسة داخلية وخارجية بتشطيب ناعم ومستوٍ.",
+      "img": "images/srv-lyasa.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "spaka",
+      "icon": "fas fa-faucet-drip",
+      "title": "عمال سباكة",
+      "desc": "تمديدات وصرف وتركيب أدوات صحية وكشف تسريبات.",
+      "img": "images/srv-spaka.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "kahroba",
+      "icon": "fas fa-bolt",
+      "title": "عمال كهرباء",
+      "desc": "تمديدات ولوحات وإنارة بمعايير أمان عالية.",
+      "img": "images/srv-kahroba.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "gypsum",
+      "icon": "fas fa-layer-group",
+      "title": "جبس بورد",
+      "desc": "أسقف مستعارة وقواطع وديكورات بدقة تنفيذ.",
+      "img": "images/srv-gypsum.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "ceramic",
+      "icon": "fas fa-border-all",
+      "title": "عمال سيراميك",
+      "desc": "تركيب سيراميك وبورسلين ورخام بفواصل مضبوطة.",
+      "img": "images/srv-ceramic.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "interlock",
+      "icon": "fas fa-road",
+      "title": "تركيب انترلوك",
+      "desc": "رصف مواقف ومداخل وحدائق بمستوى دقيق.",
+      "img": "images/srv-interlock.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "loading",
+      "icon": "fas fa-people-carry-box",
+      "title": "تحميل وتنزيل",
+      "desc": "عمال لتحميل وتنزيل الأثاث والمواد بسرعة وأمان.",
+      "img": "images/srv-loading.jpg",
+      "v": "1",
+      "hidden": false
+    },
+    {
+      "id": "demolition",
+      "icon": "fas fa-hammer",
+      "title": "تكسير ومرمات",
+      "desc": "هدم وتكسير وترميم وإزالة أنقاض وتجهيز الموقع.",
+      "img": "images/srv-demolition.jpg",
+      "v": "1",
+      "hidden": false
+    }
+  ],
+  "gallery": [
+    {
+      "cap": "فريق اللياسة أثناء التنفيذ",
+      "tag": "لياسة",
+      "img": "images/work-lyasa.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "تمديدات سباكة",
+      "tag": "سباكة",
+      "img": "images/work-spaka.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "توصيل لوحة كهرباء",
+      "tag": "كهرباء",
+      "img": "images/work-kahroba.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "تركيب جبس بورد",
+      "tag": "جبس بورد",
+      "img": "images/work-gypsum.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "تركيب سيراميك وبورسلين",
+      "tag": "سيراميك",
+      "img": "images/work-ceramic.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "رصف انترلوك للمواقف",
+      "tag": "انترلوك",
+      "img": "images/work-interlock.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "تحميل وتنزيل مواد",
+      "tag": "تحميل",
+      "img": "images/work-loading.jpg",
+      "v": "1"
+    },
+    {
+      "cap": "تكسير وترميم مواقع",
+      "tag": "تكسير",
+      "img": "images/work-demolition.jpg",
+      "v": "1"
+    }
+  ]
+}
