@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "_updated": 1789811392275,
+  "_updated": 1789811726056,
   "brand": {
     "name": "محمود العشري",
     "badge": "مقاول توريد عمال — السعودية",
@@ -12,7 +12,18 @@
     "phone": "0565157795",
     "wa": "966565157795",
     "email": "elashrymahmuod901@gmail.com",
-    "extra": []
+    "extra": [
+      {
+        "type": "instagram",
+        "label": "انستقرام",
+        "value": "https://"
+      },
+      {
+        "type": "instagram",
+        "label": "انستقرام",
+        "value": "https://"
+      }
+    ]
   },
   "social": [
     {
