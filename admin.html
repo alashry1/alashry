@@ -1,4 +1,4 @@
-<!-- admin v3.1-2026-09-19 -->
+<!-- admin v3.2-2026-09-19 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -32,8 +32,6 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 .lh h1{font-size:1.45rem;font-weight:700;text-align:center;flex:1;line-height:1.6}
 .login-card input{border-radius:12px;padding:12px 14px;background:#fff}
 .login-card .btn-y{border-radius:14px;padding:14px}
-.li-help{display:block;margin:14px auto 0;background:none;border:none;color:var(--muted);font-size:.78rem;text-decoration:underline}
-.li-txt{font-size:.75rem;color:var(--muted);margin-top:8px;background:var(--brand-soft);border:1px solid #F0DDBE;border-radius:10px;padding:8px 12px}
 #selfTest{font-size:.75rem;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:10px}
 .topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .topbar .t{font-weight:700;display:flex;align-items:center;gap:8px;margin-inline-end:auto}
@@ -87,18 +85,15 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 <div class="login-wrap" id="loginView">
   <form class="login-card" id="loginForm">
     <div class="lh"><i class="fas fa-helmet-safety"></i><h1>لوحة تحكم محمود العشري</h1></div>
-    <div class="fg"><label>اسم المستخدم</label><input id="liUser" required placeholder="اسم المالك أو المستودع" autocomplete="username"></div>
+    <div class="fg"><label>اسم المستخدم</label><input id="liUser" required autocomplete="username"></div>
     <div class="fg"><label>كلمة السر</label><input id="liPass" type="password" required placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn btn-y" style="width:100%" id="liBtn">دخول</button>
-    <div id="selfTest">⏳ جارٍ الفحص الذاتي للوحة...</div>
-    <button type="button" class="li-help" id="liHelp">كيف أنشئ كلمة السر (التوكن)؟</button>
-    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).<br>الإصدار: 3.1 — 19 سبتمبر 2026</p>
   </form>
 </div>
 
 <div id="appView" style="display:none">
   <div class="topbar">
-    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.1</span></span>
+    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.2</span></span>
     <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
     <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
     <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -168,7 +163,6 @@ function confirmBox(msg){return new Promise(function(res){
   $('#modalYes').onclick=function(){$('#modal').classList.remove('on');res(true)};
   $('#modalNo').onclick=function(){$('#modal').classList.remove('on');res(false)};
 })}
-/* ★ no-store + كاسر كاش: لا قراءة قديمة من API بعد اليوم ★ */
 var api=function(path,opt){opt=opt||{};return fetch('https://api.github.com/repos/'+S.owner+'/'+S.repo+'/contents/'+path,Object.assign({cache:'no-store'},opt,{headers:Object.assign({Authorization:'Bearer '+S.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},opt.headers||{})}))};
 var b64dec=function(b){var bin=atob(b.replace(/\s/g,''));var u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)};
 var b64enc=function(s){var u=new TextEncoder().encode(s);var bin='';for(var i=0;i<u.length;i++)bin+=String.fromCharCode(u[i]);return btoa(bin)};
@@ -208,6 +202,8 @@ function compress(file,maxW,q){maxW=maxW||1600;q=q||0.8;return new Promise(funct
 
 const ICONS={wa:'fab fa-whatsapp',phone:'fas fa-phone',email:'fas fa-envelope',instagram:'fab fa-instagram',x:'fab fa-x-twitter',tiktok:'fab fa-tiktok',snapchat:'fab fa-snapchat',facebook:'fab fa-facebook-f',location:'fas fa-location-dot',website:'fas fa-globe',clock:'fas fa-clock',youtube:'fab fa-youtube',linkedin:'fab fa-linkedin-in',telegram:'fab fa-telegram',threads:'fab fa-threads',pinterest:'fab fa-pinterest',reddit:'fab fa-reddit'};
 const SOCIAL_ICONS={tiktok:'fab fa-tiktok',facebook:'fab fa-facebook-f',instagram:'fab fa-instagram','x-twitter':'fab fa-x-twitter',snapchat:'fab fa-snapchat',youtube:'fab fa-youtube',linkedin:'fab fa-linkedin-in',telegram:'fab fa-telegram',threads:'fab fa-threads',whatsapp:'fab fa-whatsapp',pinterest:'fab fa-pinterest',reddit:'fab fa-reddit'};
+/* ★ وسائل الاتصال الإضافية: 3 أنواع فقط ★ */
+const EXTRA_TYPES={phone:'اتصال',wa:'واتساب',email:'بريد إلكتروني'};
 
 /* ===== مولّدات المناطق ===== */
 function genHero(c){
@@ -298,7 +294,7 @@ function friendly(m){
   return m;
 }
 
-/* ===== ★ النشر + ترحيل تلقائي للتحديث إلى 60 ثانية ★ ===== */
+/* ===== ★ النشر ★ ===== */
 async function publish(newCfg){
   try{
     document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=true);
@@ -308,7 +304,6 @@ async function publish(newCfg){
     let raw=fresh.raw;
     const reps=[[old.brand.name,newCfg.brand.name],[old.contact.phone,newCfg.contact.phone],[old.contact.wa,newCfg.contact.wa],[old.contact.email,newCfg.contact.email],[old.brand.tagline,newCfg.brand.tagline]];
     reps.forEach(function(pr){const o=pr[0],n=pr[1];if(o&&n&&o!==n)raw=raw.split(o).join(n)});
-    /* ترحيل تلقائي: فحص الزوار كل 60 ثانية بدل 25 (يُطبق مرة واحدة على index.html) */
     if(raw.indexOf('setInterval(checkUpdate,25000)')>-1)raw=raw.split('setInterval(checkUpdate,25000)').join('setInterval(checkUpdate,60000)');
     if(raw.indexOf('≤25 ثانية')>-1)raw=raw.split('≤25 ثانية').join('≤60 ثانية');
     raw=setRegion(raw,'CONFIG',configInner(newCfg));
@@ -525,11 +520,11 @@ function renderContact(){
       <div class="fg"><label>رقم الواتساب (دولي)</label><input id="cWa" value="${esc(c.wa)}"></div>
     </div>
     <div class="fg"><label>البريد الإلكتروني</label><input id="cEmail" value="${esc(c.email)}"></div>
-    <h3 style="margin-top:18px"><i class="fas fa-plus"></i> وسائل إضافية</h3>
+    <h3 style="margin-top:18px"><i class="fas fa-plus"></i> وسائل إضافية (اتصال / واتساب / بريد فقط)</h3>
     <div id="exList">${(c.extra||[]).map((x,i)=>`
       <div class="item" data-i="${i}">
         <div class="row2">
-          <div class="fg"><label>النوع</label><select data-f="type">${Object.keys(ICONS).map(k=>`<option value="${k}" ${k===x.type?'selected':''}>${k}</option>`).join('')}</select></div>
+          <div class="fg"><label>النوع</label><select data-f="type">${Object.keys(EXTRA_TYPES).map(k=>`<option value="${k}" ${k===x.type?'selected':''}>${EXTRA_TYPES[k]}</option>`).join('')}${(x.type&&!EXTRA_TYPES[x.type])?`<option value="${x.type}" selected>${x.type}</option>`:''}</select></div>
           <div class="fg"><label>التسمية</label><input data-f="label" value="${esc(x.label)}"></div>
         </div>
         <div class="fg"><label>الرابط / القيمة</label><input data-f="value" value="${esc(x.value)}"></div>
@@ -566,7 +561,7 @@ function collectContact(){
     CFG.social[i].url=it.querySelector('[data-f="url"]').value;
   });
 }
-window.addEx=()=>{collectContact();CFG.contact.extra.push({type:'instagram',label:'انستقرام',value:'https://'});renderContact()};
+window.addEx=()=>{collectContact();CFG.contact.extra.push({type:'phone',label:'رقم اتصال',value:''});renderContact()};
 window.delEx=i=>{collectContact();CFG.contact.extra.splice(i,1);renderContact()};
 window.addSoc=()=>{
   const url=$('#nSocUrl').value.trim();
@@ -664,25 +659,27 @@ $('#tabs').addEventListener('click',e=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
   ['identity','services','gallery','contact','texts','wamsg'].forEach(k=>{$('#sec-'+k).style.display=(k===t.dataset.t)?'':'none'});
 });
-$('#liHelp').onclick=()=>{$('#liHelpTxt').hidden=!$('#liHelpTxt').hidden};
 
-/* ★ الفحص الذاتي ★ */
+/* ★ الحارس الصامت: لا يظهر شيء إلا عند وجود عطل ★ */
 (async function selfTest(){
-  const el=$('#selfTest');
-  const out=['✅ الجافاسكربت يعمل — الإصدار 3.1'];
+  const out=[];
   try{
     const r=await fetch('index.html?selftest='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error(r.status);
     const t=await r.text();
-    out.push(t.indexOf('EDIT:CONFIG:START')>-1?'✅ index.html سليم: المناطق المُعلَّمة موجودة':'❌ index.html بلا مناطق مُعلَّمة');
-    out.push(t.indexOf('site-config')>-1?'✅ إعدادات الموقع موجودة':'❌ إعدادات الموقع مفقودة');
-    out.push(t.indexOf('checkUpdate,60000')>-1?'✅ تحديث الزوار: كل 60 ثانية':'⚠️ تحديث الزوار: 25 ثانية — سيُرحَّل تلقائياً لأول حفظ');
-  }catch(e){out.push('❌ تعذر قراءة index.html ('+e.message+') — افتح اللوحة من رابط الموقع لا من ملف محلي')}
+    if(t.indexOf('EDIT:CONFIG:START')<0)out.push('❌ index.html بلا مناطق مُعلَّمة');
+    if(t.indexOf('site-config')<0)out.push('❌ إعدادات الموقع مفقودة');
+    if(t.indexOf('checkUpdate,60000')<0)out.push('⚠️ تحديث الزوار ما زال 25 ثانية — سيُرحَّل عند أول حفظ');
+  }catch(e){out.push('❌ تعذر قراءة index.html ('+e.message+')')}
   try{
     const r2=await fetch('data/site.json?t='+Date.now(),{cache:'no-store'});
-    out.push(r2.ok?'✅ ملف البث المباشر موجود':'⚠️ ملف البث غير موجود — سيُنشأ عند أول حفظ');
+    if(!r2.ok)out.push('⚠️ ملف البث غير موجود — سيُنشأ عند أول حفظ');
   }catch(e){out.push('⚠️ تعذر فحص ملف البث')}
+  if(!out.length)return;
+  const el=document.createElement('div');
+  el.id='selfTest';
   el.innerHTML=out.join('<br>');
+  $('#liBtn').insertAdjacentElement('afterend',el);
 })();
 
 function parseCreds(u){
