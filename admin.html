@@ -1,4 +1,4 @@
-<!-- admin v3.0-2026-09-19 -->
+<!-- admin v3.1-2026-09-19 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -53,8 +53,21 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 .hide-tag{background:#FDE8E8;color:var(--red);border-radius:8px;padding:2px 9px;font-size:.72rem;font-weight:700}
 .savebar{position:sticky;bottom:0;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center;gap:10px;z-index:40}
 .hint{font-size:.8rem;color:var(--muted);background:var(--green-soft);border:1px solid #CFE9D9;border-radius:10px;padding:9px 13px;margin-bottom:14px}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--dark);color:#F5C36B;padding:13px 26px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);transition:.4s;z-index:200;opacity:0;max-width:90vw;text-align:center}
-#toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+/* ===== توست عصري بالأسفل ===== */
+#toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,150%);display:flex;align-items:center;gap:12px;min-width:280px;max-width:92vw;padding:13px 18px;border-radius:18px;background:rgba(24,27,32,.93);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.35);color:#F3F4F6;z-index:400;opacity:0;transition:transform .45s cubic-bezier(.2,.9,.25,1.15),opacity .3s;overflow:hidden}
+#toast.on{transform:translate(-50%,0);opacity:1}
+#toast .ti{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;font-size:1.05rem}
+#toast .tt{font-size:.88rem;font-weight:600;line-height:1.5}
+#toast .bar{position:absolute;bottom:0;left:0;height:3px;width:100%;transform-origin:left;animation:tbar 4s linear forwards}
+#toast[data-k="ok"] .ti{background:rgba(22,163,74,.2);color:#4ADE80}
+#toast[data-k="ok"] .bar{background:#4ADE80}
+#toast[data-k="err"] .ti{background:rgba(220,38,38,.2);color:#F87171}
+#toast[data-k="err"] .bar{background:#F87171}
+#toast[data-k="warn"] .ti{background:rgba(245,158,11,.2);color:#FBBF24}
+#toast[data-k="warn"] .bar{background:#FBBF24}
+#toast[data-k="info"] .ti{background:rgba(217,119,6,.22);color:#F5C36B}
+#toast[data-k="info"] .bar{background:#F5C36B}
+@keyframes tbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 #modal{position:fixed;inset:0;background:rgba(18,20,24,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
 #modal.on{display:flex}
 #modal .box{background:#fff;border-radius:18px;padding:26px;max-width:380px;width:100%;text-align:center}
@@ -79,13 +92,13 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
     <button class="btn btn-y" style="width:100%" id="liBtn">دخول</button>
     <div id="selfTest">⏳ جارٍ الفحص الذاتي للوحة...</div>
     <button type="button" class="li-help" id="liHelp">كيف أنشئ كلمة السر (التوكن)؟</button>
-    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).<br>الإصدار: 3.0 — 19 سبتمبر 2026</p>
+    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).<br>الإصدار: 3.1 — 19 سبتمبر 2026</p>
   </form>
 </div>
 
 <div id="appView" style="display:none">
   <div class="topbar">
-    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.0</span></span>
+    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.1</span></span>
     <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
     <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
     <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -129,19 +142,39 @@ var CFG=null,RAW='',SHA='';
 var pending={};
 var pendingPublish=null;
 
-function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},4000)}
+/* ===== التوست العصري ===== */
+var toastTimer=null;
+function toast(m){
+  var k='info',ic='fa-circle-info',txt=m;
+  if(m.indexOf('✅')===0){k='ok';ic='fa-circle-check';txt=m.slice(1).trim()}
+  else if(m.indexOf('💾')===0){k='ok';ic='fa-floppy-disk';txt=m.slice(1).trim()}
+  else if(m.indexOf('👋')===0){k='ok';ic='fa-hand';txt=m.slice(1).trim()}
+  else if(m.indexOf('❌')===0){k='err';ic='fa-circle-exclamation';txt=m.slice(1).trim()}
+  else if(m.indexOf('⚠️')===0){k='warn';ic='fa-triangle-exclamation';txt=m.slice(2).trim()}
+  else if(m.indexOf('📎')===0){k='info';ic='fa-paperclip';txt=m.slice(1).trim()}
+  else if(m.indexOf('🔄')===0){k='info';ic='fa-rotate';txt=m.slice(1).trim()}
+  else if(m.indexOf('➕')===0){k='info';ic='fa-plus';txt=m.slice(1).trim()}
+  else if(m.indexOf('⬇️')===0){k='info';ic='fa-download';txt=m.slice(2).trim()}
+  var t=$('#toast');
+  t.removeAttribute('class');t.setAttribute('data-k',k);
+  t.innerHTML='<span class="ti"><i class="fas '+ic+'"></i></span><span class="tt">'+esc(txt)+'</span><span class="bar"></span>';
+  void t.offsetWidth;
+  t.classList.add('on');
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('on')},4000);
+}
 window.addEventListener('error',function(e){try{toast('❌ خطأ: '+(e.message||'غير متوقع'))}catch(_){}});
 function confirmBox(msg){return new Promise(function(res){
   $('#modalMsg').textContent=msg;$('#modal').classList.add('on');
   $('#modalYes').onclick=function(){$('#modal').classList.remove('on');res(true)};
   $('#modalNo').onclick=function(){$('#modal').classList.remove('on');res(false)};
 })}
-var api=function(path,opt){opt=opt||{};return fetch('https://api.github.com/repos/'+S.owner+'/'+S.repo+'/contents/'+path,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+S.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},opt.headers||{})}))};
+/* ★ no-store + كاسر كاش: لا قراءة قديمة من API بعد اليوم ★ */
+var api=function(path,opt){opt=opt||{};return fetch('https://api.github.com/repos/'+S.owner+'/'+S.repo+'/contents/'+path,Object.assign({cache:'no-store'},opt,{headers:Object.assign({Authorization:'Bearer '+S.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},opt.headers||{})}))};
 var b64dec=function(b){var bin=atob(b.replace(/\s/g,''));var u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)};
 var b64enc=function(s){var u=new TextEncoder().encode(s);var bin='';for(var i=0;i<u.length;i++)bin+=String.fromCharCode(u[i]);return btoa(bin)};
 
 async function fetchIndex(){
-  const r=await api('index.html?ref='+S.branch);
+  const r=await api('index.html?ref='+S.branch+'&_='+Date.now());
   if(r.status===401)throw new Error('TOKEN');
   if(r.status===404)throw new Error('NOTFOUND');
   if(!r.ok)throw new Error('قراءة index.html فشلت ('+r.status+')');
@@ -252,7 +285,7 @@ const configInner=c=>`<script type="application/json" id="site-config">\n${JSON.
 /* ===== رفع الملفات ===== */
 async function putFile(path,b64,msg){
   let sha;
-  const g=await api(path+'?ref='+S.branch);
+  const g=await api(path+'?ref='+S.branch+'&_='+Date.now());
   if(g.status===401)throw new Error('TOKEN');
   if(g.ok)sha=(await g.json()).sha;
   const r=await api(path,{method:'PUT',body:JSON.stringify(Object.assign({message:msg||('لوحة التحكم: رفع صورة '+path),content:b64,branch:S.branch},sha?{sha}:{}))});
@@ -265,7 +298,7 @@ function friendly(m){
   return m;
 }
 
-/* ===== ★ النشر ★ ===== */
+/* ===== ★ النشر + ترحيل تلقائي للتحديث إلى 60 ثانية ★ ===== */
 async function publish(newCfg){
   try{
     document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=true);
@@ -275,6 +308,9 @@ async function publish(newCfg){
     let raw=fresh.raw;
     const reps=[[old.brand.name,newCfg.brand.name],[old.contact.phone,newCfg.contact.phone],[old.contact.wa,newCfg.contact.wa],[old.contact.email,newCfg.contact.email],[old.brand.tagline,newCfg.brand.tagline]];
     reps.forEach(function(pr){const o=pr[0],n=pr[1];if(o&&n&&o!==n)raw=raw.split(o).join(n)});
+    /* ترحيل تلقائي: فحص الزوار كل 60 ثانية بدل 25 (يُطبق مرة واحدة على index.html) */
+    if(raw.indexOf('setInterval(checkUpdate,25000)')>-1)raw=raw.split('setInterval(checkUpdate,25000)').join('setInterval(checkUpdate,60000)');
+    if(raw.indexOf('≤25 ثانية')>-1)raw=raw.split('≤25 ثانية').join('≤60 ثانية');
     raw=setRegion(raw,'CONFIG',configInner(newCfg));
     raw=setRegion(raw,'HERO',genHero(newCfg));
     raw=setRegion(raw,'SERVICES',genServices(newCfg));
@@ -289,7 +325,7 @@ async function publish(newCfg){
     if(!r.ok){const j=await r.json().catch(()=>null);throw new Error('الحفظ فشل ('+r.status+')'+(j&&j.message?' — '+j.message:''))}
     await putFile('data/site.json',b64enc(JSON.stringify(newCfg,null,2)),'لوحة التحكم: تحديث ملف البث المباشر');
     RAW=raw;SHA=fresh.sha;CFG=newCfg;
-    toast('✅ تم الحفظ والنشر — يصل الزوار تلقائياً بدون تحديث خلال ≤25 ثانية');
+    toast('💾 تم الحفظ والنشر — يصل الزوار تلقائياً خلال ≤60 ثانية');
     renderAll();
   }catch(e){
     if(e.message==='TOKEN'){pendingPublish=newCfg;showTok()}
@@ -322,7 +358,7 @@ function renderIdentity(){
     <div class="fg"><label>رفع صورة شخصية جديدة</label><input type="file" accept="image/*" id="iProfile"></div>
     <div class="fg"><label>رفع بانر مشاركة واتساب جديد</label><input type="file" accept="image/*" id="iBanner"></div>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveIdentity()"><i class="fas fa-save"></i> حفظ ونشر الهوية</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveIdentity()">💾 حفظ ونشر الهوية</button></div>`;
   $('#iProfile').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1200,.82);pending['images/profile.jpg']=r.b64;CFG.brand.profileV=Date.now();toast('📎 الصورة جاهزة — اضغط حفظ ونشر')};
   $('#iBanner').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1600,.82);pending['images/og-banner.jpg']=r.b64;toast('📎 البانر جاهز — اضغط حفظ ونشر')};
 }
@@ -355,7 +391,7 @@ function renderServices(){
     <div id="svcList">${CFG.services.map(svcRow).join('')}</div>
     <button class="btn btn-o" onclick="addSvc()"><i class="fas fa-plus"></i> إضافة خدمة جديدة</button>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveServices()"><i class="fas fa-save"></i> حفظ ونشر الخدمات</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveServices()">💾 حفظ ونشر الخدمات</button></div>`;
   $('#svcList').querySelectorAll('.item').forEach(it=>{
     const i=+it.dataset.i;
     it.querySelector('[data-f="img"]').onchange=async e=>{
@@ -425,7 +461,7 @@ function renderGallery(){
       <button class="btn btn-y btn-s" onclick="addGal()"><i class="fas fa-plus"></i> إضافة للمعرض</button>
     </div>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveGallery()"><i class="fas fa-save"></i> حفظ ونشر المعرض</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveGallery()">💾 حفظ ونشر المعرض</button></div>`;
   $('#galList').querySelectorAll('.item').forEach(it=>{
     const i=+it.dataset.i;
     it.querySelector('[data-f="img"]').onchange=async e=>{
@@ -513,7 +549,7 @@ function renderContact(){
       <button class="btn btn-y btn-s" onclick="addSoc()"><i class="fas fa-plus"></i> إضافة الحساب</button>
     </div>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveContact()"><i class="fas fa-save"></i> حفظ ونشر التواصل والسوشيال</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveContact()">💾 حفظ ونشر التواصل والسوشيال</button></div>`;
 }
 function collectContact(){
   CFG.contact.phone=$('#cPhone').value.trim();
@@ -564,7 +600,7 @@ function renderTexts(){
         <div class="fg"><label>الوصف</label><input data-f="l" value="${esc(s.l)}"></div>
       </div>`).join('')}</div>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveTexts()"><i class="fas fa-save"></i> حفظ ونشر النصوص</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveTexts()">💾 حفظ ونشر النصوص</button></div>`;
 }
 function saveTexts(){
   CFG.about.p1=$('#tP1').value;CFG.about.p2=$('#tP2').value;
@@ -588,7 +624,7 @@ function renderWa(){
     <label>معاينة حية</label>
     <pre id="wPrev" style="background:var(--dark);color:#E8E6E1;border-radius:12px;padding:14px;font-family:inherit;font-size:.85rem;white-space:pre-wrap"></pre>
   </div>
-  <div class="savebar"><button class="btn btn-g" onclick="saveWa()"><i class="fas fa-save"></i> حفظ ونشر الرسائل</button></div>`;
+  <div class="savebar"><button class="btn btn-g" onclick="saveWa()">💾 حفظ ونشر الرسائل</button></div>`;
   const upd=()=>{$('#wPrev').textContent=$('#wG').value+'\n\n'+$('#wS').value+'\n\nأرغب بطلب الخدمة التالية:\n🛠️ الخدمة: عمال لياسة\n📋 الوصف: ...\n\n📍 الموقع: ...\n📅 موعد المعاينة: ...\n\n'+$('#wC').value};
   ['wG','wS','wC'].forEach(id=>$('#'+id).addEventListener('input',upd));upd();
 }
@@ -630,16 +666,17 @@ $('#tabs').addEventListener('click',e=>{
 });
 $('#liHelp').onclick=()=>{$('#liHelpTxt').hidden=!$('#liHelpTxt').hidden};
 
-/* ★ الفحص الذاتي: اللوحة تفحص نفسها أمامك عند الفتح ★ */
+/* ★ الفحص الذاتي ★ */
 (async function selfTest(){
   const el=$('#selfTest');
-  const out=['✅ الجافاسكربت يعمل — الإصدار 3.0'];
+  const out=['✅ الجافاسكربت يعمل — الإصدار 3.1'];
   try{
     const r=await fetch('index.html?selftest='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error(r.status);
     const t=await r.text();
     out.push(t.indexOf('EDIT:CONFIG:START')>-1?'✅ index.html سليم: المناطق المُعلَّمة موجودة':'❌ index.html بلا مناطق مُعلَّمة');
     out.push(t.indexOf('site-config')>-1?'✅ إعدادات الموقع موجودة':'❌ إعدادات الموقع مفقودة');
+    out.push(t.indexOf('checkUpdate,60000')>-1?'✅ تحديث الزوار: كل 60 ثانية':'⚠️ تحديث الزوار: 25 ثانية — سيُرحَّل تلقائياً لأول حفظ');
   }catch(e){out.push('❌ تعذر قراءة index.html ('+e.message+') — افتح اللوحة من رابط الموقع لا من ملف محلي')}
   try{
     const r2=await fetch('data/site.json?t='+Date.now(),{cache:'no-store'});
@@ -671,7 +708,7 @@ $('#loginForm').onsubmit=async e=>{
 };
 function enterApp(){
   $('#loginView').style.display='none';$('#appView').style.display='';
-  renderAll();toast('👋 أهلاً بك — التعديلات تُحفظ بالملفات وتصل الزوار بدون تحديث');
+  renderAll();toast('👋 أهلاً بك — عدّل واضغط 💾 حفظ ونشر مباشرة، بدون أي خطوة إضافية');
 }
 (function init(){
   const s=sessionStorage.getItem('ap');
