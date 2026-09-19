@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-:root{--bg:#F7F5F0;--ink:#20242A;--muted:#6E747C;--brand:#B45309;--brand-2:#D97706;--brand-soft:#FBF0DF;--green:#16A34A;--green-soft:#E8F6EE;--line:#E8E4DB;--dark:#20242A;--red:#DC2626;--shadow:0 10px 30px rgba(32,36,42,.08)}
+:root{--bg:#F7F5F0;--surface:#FFF;--ink:#20242A;--muted:#6E747C;--brand:#B45309;--brand-2:#D97706;--brand-soft:#FBF0DF;--green:#16A34A;--green-soft:#E8F6EE;--line:#E8E4DB;--dark:#20242A;--red:#DC2626;--shadow:0 10px 30px rgba(32,36,42,.08)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
 img{max-width:100%;display:block}
@@ -24,23 +24,15 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 .btn-o{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-o:hover{border-color:var(--brand)}
 .btn-r{background:#FDE8E8;color:var(--red);border:1px solid #F5C2C2}.btn-r:hover{background:var(--red);color:#fff}
 .btn-s{padding:7px 12px;font-size:.82rem;border-radius:9px}
-.btn[disabled]{opacity:.55;pointer-events:none}
-/* ===== شاشة الدخول (مطابقة للصورة) ===== */
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:#F0EFEB}
-.login-card{background:#FBFBFA;border:1px solid #ECE9E2;border-radius:26px;padding:46px 34px 32px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.05)}
-.login-head{position:relative;margin-bottom:36px}
-.login-head .ic{position:absolute;inset-inline-start:0;top:6px;font-size:2.1rem;color:var(--brand)}
-.login-head h1{font-size:1.6rem;font-weight:700;text-align:center;line-height:1.6}
-.login-card label{font-size:.95rem;color:#3E434B;margin-bottom:8px}
-.login-card input{padding:15px 16px;border-radius:14px;border:1px solid #DBD7CE;font-size:1rem}
-.login-card .btn{width:100%;padding:16px;border-radius:14px;font-size:1.05rem;font-weight:700;margin-top:8px}
-.helplink{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted);font-size:.8rem;text-decoration:underline}
-.helpbox{display:none;font-size:.78rem;color:var(--muted);background:var(--brand-soft);border:1px solid #F0DDBE;border-radius:10px;padding:10px 12px;margin-top:10px}
-.helpbox.on{display:block}
-/* ===== شاشة انتهاء التوكن (نظام مكرونجي) ===== */
-.overlay{position:fixed;inset:0;background:rgba(240,239,235,.97);display:none;place-items:center;z-index:400;padding:20px}
-.overlay.on{display:grid}
-/* ===== التطبيق ===== */
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:#ECECEC}
+.login-card{background:#FAFAFA;border:1px solid #E6E6E6;border-radius:22px;padding:38px 34px;max-width:430px;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.lh{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.lh i{color:var(--brand);font-size:2rem}
+.lh h1{font-size:1.45rem;font-weight:700;text-align:center;flex:1;line-height:1.6}
+.login-card input{border-radius:12px;padding:12px 14px;background:#fff}
+.login-card .btn-y{border-radius:14px;padding:14px}
+.li-help{display:block;margin:14px auto 0;background:none;border:none;color:var(--muted);font-size:.78rem;text-decoration:underline}
+.li-txt{font-size:.75rem;color:var(--muted);margin-top:8px;background:var(--brand-soft);border:1px solid #F0DDBE;border-radius:10px;padding:8px 12px}
 .topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .topbar .t{font-weight:700;display:flex;align-items:center;gap:8px;margin-inline-end:auto}
 .topbar .t i{color:var(--brand)}
@@ -59,12 +51,16 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 .hide-tag{background:#FDE8E8;color:var(--red);border-radius:8px;padding:2px 9px;font-size:.72rem;font-weight:700}
 .savebar{position:sticky;bottom:0;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;display:flex;justify-content:center;gap:10px;z-index:40}
 .hint{font-size:.8rem;color:var(--muted);background:var(--green-soft);border:1px solid #CFE9D9;border-radius:10px;padding:9px 13px;margin-bottom:14px}
-#toast{position:fixed;bottom:24px;inset-inline-start:50%;transform:translateX(50%) translateY(90px);background:var(--dark);color:#F5C36B;padding:13px 26px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);transition:.4s;z-index:500;opacity:0}
-#toast.on{transform:translateX(50%) translateY(0);opacity:1}
-#modal{position:fixed;inset:0;background:rgba(18,20,24,.6);display:none;align-items:center;justify-content:center;z-index:450;padding:20px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--dark);color:#F5C36B;padding:13px 26px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);transition:.4s;z-index:200;opacity:0;max-width:90vw;text-align:center}
+#toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+#modal{position:fixed;inset:0;background:rgba(18,20,24,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
 #modal.on{display:flex}
 #modal .box{background:#fff;border-radius:18px;padding:26px;max-width:380px;width:100%;text-align:center}
 #modal .box p{margin-bottom:18px;font-weight:600}
+#tokView{position:fixed;inset:0;background:rgba(18,20,24,.6);display:none;align-items:center;justify-content:center;z-index:250;padding:20px}
+#tokView.on{display:flex}
+#tokView h2{font-size:1.15rem;margin-bottom:8px}
+#tokView p{font-size:.82rem;color:var(--muted);margin-bottom:14px}
 .spin{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .soc-preview{width:44px;height:44px;border-radius:50%;background:var(--dark);color:#F5C36B;display:inline-grid;place-items:center;font-size:1.2rem;vertical-align:middle}
@@ -73,44 +69,20 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 </head>
 <body>
 
-<!-- ===== الدخول ===== -->
 <div class="login-wrap" id="loginView">
   <form class="login-card" id="loginForm">
-    <div class="login-head">
-      <i class="fas fa-hard-hat ic"></i>
-      <h1>لوحة تحكم محمود العشري</h1>
-    </div>
+    <div class="lh"><i class="fas fa-helmet-safety"></i><h1>لوحة تحكم محمود العشري</h1></div>
     <div class="fg"><label>اسم المستخدم</label><input id="liUser" required placeholder="اسم المالك أو المستودع" autocomplete="username"></div>
-    <div class="fg"><label>كلمة السر</label><input id="liToken" type="password" required placeholder="••••••••" autocomplete="current-password"></div>
-    <button class="btn btn-y" id="liBtn">دخول</button>
-    <button type="button" class="helplink" id="helpToggle">كيف أنشئ التوكن؟</button>
-    <div class="helpbox" id="helpBox">
-      1) GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token.<br>
-      2) اختر مستودع <b>alashry</b> فقط.<br>
-      3) من Repository permissions اجعل <b>Contents = Read and write</b>.<br>
-      4) انسخ التوكن والصقه في خانة «كلمة السر»، واكتب في «اسم المستخدم»: alashry1 أو alashry.
-    </div>
+    <div class="fg"><label>كلمة السر</label><input id="liPass" type="password" required placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="btn btn-y" style="width:100%" id="liBtn">دخول</button>
+    <button type="button" class="li-help" id="liHelp">كيف أنشئ كلمة السر (التوكن)؟</button>
+    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).</p>
   </form>
 </div>
 
-<!-- ===== انتهاء التوكن (بدون فقدان التعديلات) ===== -->
-<div class="overlay" id="tokView">
-  <div class="login-card">
-    <div class="login-head" style="margin-bottom:12px">
-      <i class="fas fa-triangle-exclamation ic" style="color:var(--red)"></i>
-      <h1 style="font-size:1.3rem">⚠️ انتهت صلاحية التوكن</h1>
-    </div>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">انتهت صلاحية التوكن أو لا يملك الصلاحية. جدّده من GitHub ثم أدخله هنا للمتابعة — <b>بياناتك لم تُفقد</b>.</p>
-    <div class="fg"><label>توكن جديد</label><input id="tkNew" type="password" placeholder="github_pat_..."></div>
-    <button class="btn btn-y" id="tkSave">حفظ والمتابعة</button>
-    <button class="btn btn-o" style="width:100%;margin-top:8px" id="tkExit">خروج</button>
-  </div>
-</div>
-
-<!-- ===== التطبيق ===== -->
 <div id="appView" style="display:none">
   <div class="topbar">
-    <span class="t"><i class="fas fa-hard-hat"></i> لوحة تحكم العشري</span>
+    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري</span>
     <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
     <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
     <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -135,52 +107,60 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 
 <div id="toast"></div>
 <div id="modal"><div class="box"><p id="modalMsg"></p><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-r" id="modalYes">تأكيد</button><button class="btn btn-o" id="modalNo">إلغاء</button></div></div></div>
+<div id="tokView"><div class="login-card">
+  <h2>⚠️ انتهت صلاحية التوكن</h2>
+  <p>انتهت صلاحية التوكن أو لا يملك الصلاحية. جدّده من GitHub ثم أدخله هنا للمتابعة — <b>بياناتك لم تُفقد</b> وسيكتمل الحفظ تلقائياً.</p>
+  <div class="fg"><input id="tkNew" type="password" placeholder="github_pat_..."></div>
+  <div style="display:flex;gap:10px">
+    <button class="btn btn-y" id="tkBtn" style="flex:1">حفظ والمتابعة</button>
+    <a class="btn btn-o" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">توكن جديد</a>
+  </div>
+</div></div>
 
 <script>
-const $=s=>document.querySelector(s);
-const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const DEF={owner:'alashry1',repo:'alashry',branch:'main'};
-let S={owner:DEF.owner,repo:DEF.repo,branch:DEF.branch,token:''};
-let CFG=null,RAW='',SHA='';
-let pending={};
-let publishBusy=false;
-let retryFn=null;
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')};
+var clone=function(o){return JSON.parse(JSON.stringify(o))};
+var S={owner:'',repo:'',branch:'main',token:''};
+var CFG=null,RAW='',SHA='';
+var pending={};
+var pendingPublish=null;
 
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3400)}
-function confirmBox(msg){return new Promise(res=>{
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},4000)}
+/* ★ ملتقط الأخطاء العام: لا صمت بعد اليوم — أي عطل يظهر رسالة ★ */
+window.addEventListener('error',function(e){try{toast('❌ خطأ: '+(e.message||'غير متوقع'))}catch(_){}});
+function confirmBox(msg){return new Promise(function(res){
   $('#modalMsg').textContent=msg;$('#modal').classList.add('on');
-  $('#modalYes').onclick=()=>{$('#modal').classList.remove('on');res(true)};
-  $('#modalNo').onclick=()=>{$('#modal').classList.remove('on');res(false)};
+  $('#modalYes').onclick=function(){$('#modal').classList.remove('on');res(true)};
+  $('#modalNo').onclick=function(){$('#modal').classList.remove('on');res(false)};
 })}
-const api=(path,opt={})=>fetch(`https://api.github.com/repos/${S.owner}/${S.repo}/contents/${path}`,{
-  ...opt,headers:{Authorization:`Bearer ${S.token}`,Accept:'application/vnd.github+json','Content-Type':'application/json',...(opt.headers||{})}});
-const b64dec=b=>{const bin=atob(b.replace(/\s/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)};
-const b64enc=s=>{const u=new TextEncoder().encode(s);let bin='';for(let i=0;i<u.length;i++)bin+=String.fromCharCode(u[i]);return btoa(bin)};
+var api=function(path,opt){opt=opt||{};return fetch('https://api.github.com/repos/'+S.owner+'/'+S.repo+'/contents/'+path,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+S.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},opt.headers||{})}))};
+var b64dec=function(b){var bin=atob(b.replace(/\s/g,''));var u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)};
+var b64enc=function(s){var u=new TextEncoder().encode(s);var bin='';for(var i=0;i<u.length;i++)bin+=String.fromCharCode(u[i]);return btoa(bin)};
 
 async function fetchIndex(){
   const r=await api('index.html?ref='+S.branch);
-  if(r.status===401||r.status===403)throw new Error('TOKEN');
+  if(r.status===401)throw new Error('TOKEN');
+  if(r.status===404)throw new Error('NOTFOUND');
   if(!r.ok)throw new Error('قراءة index.html فشلت ('+r.status+')');
   const j=await r.json();
   return{raw:b64dec(j.content),sha:j.sha};
 }
 function parseConfig(raw){
   const m=raw.match(/<!--✂️EDIT:CONFIG:START-->([\s\S]*?)<!--✂️EDIT:CONFIG:END-->/);
-  if(!m)throw new Error('ملف index.html لا يحتوي المناطق المُعلَّمة');
+  if(!m)throw new Error('ملف index.html لا يحتوي المناطق المُعلَّمة — ارفع النسخة الجديدة أولاً');
   const jm=m[1].match(/<script type="application\/json" id="site-config">([\s\S]*?)<\/script>/);
   return JSON.parse(jm[1]);
 }
-/* ✅ إصلاح جذري: استبدال المناطق بطريقة indexOf المضمونة (بدون Regex) */
 function setRegion(raw,key,inner){
-  const s='<!--✂️EDIT:'+key+':START-->', en='<!--✂️EDIT:'+key+':END-->';
-  const i=raw.indexOf(s), j=raw.indexOf(en);
-  if(i===-1||j===-1||j<i)throw new Error('منطقة '+key+' مفقودة من ملف index.html');
-  return raw.slice(0,i+s.length)+'\n'+inner+'\n'+raw.slice(j);
+  const re=new RegExp(`(<!--✂️EDIT:${key}:START-->)[\\s\\S]*?(<!--✂️EDIT:${key}:END-->)`);
+  if(!re.test(raw))throw new Error('منطقة '+key+' مفقودة من الملف');
+  return raw.replace(re,function(m,a,b){return a+'\n'+inner+'\n'+b});
 }
-function compress(file,maxW=1600,q=0.8){return new Promise((res,rej)=>{
+function compress(file,maxW,q){maxW=maxW||1600;q=q||0.8;return new Promise(function(res,rej){
   const rd=new FileReader();
-  rd.onload=()=>{const img=new Image();
-    img.onload=()=>{let w=img.width,h=img.height;
+  rd.onload=function(){const img=new Image();
+    img.onload=function(){let w=img.width,h=img.height;
       if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
       const c=document.createElement('canvas');c.width=w;c.height=h;
       c.getContext('2d').drawImage(img,0,0,w,h);
@@ -259,7 +239,8 @@ function genSocial(c){
   const s=c.social||[];
   if(!s.length)return '';
   let h=`    <div class="social-divider"><span>تابعنا على</span></div>
-    <div class="social-icons">\n`;
+    <div class="social-icons">
+`;
   s.forEach(x=>{h+=`      <a href="${esc(x.url)}" target="_blank" rel="noopener" aria-label="${esc(x.type)}" data-type="${esc(x.type)}"><i class="${SOCIAL_ICONS[x.type]||'fas fa-link'}"></i></a>\n`});
   h+=`    </div>`;
   return h;
@@ -270,20 +251,22 @@ const configInner=c=>`<script type="application/json" id="site-config">\n${JSON.
 async function putFile(path,b64,msg){
   let sha;
   const g=await api(path+'?ref='+S.branch);
-  if(g.status===401||g.status===403)throw new Error('TOKEN');
+  if(g.status===401)throw new Error('TOKEN');
   if(g.ok)sha=(await g.json()).sha;
-  const r=await api(path,{method:'PUT',body:JSON.stringify({message:msg||('لوحة التحكم: تحديث '+path),content:b64,branch:S.branch,...(sha?{sha}:{})})});
-  if(r.status===401||r.status===403)throw new Error('TOKEN');
-  if(!r.ok)throw new Error('رفع الملف فشل: '+path+' ('+r.status+')');
+  const r=await api(path,{method:'PUT',body:JSON.stringify({message:msg||(`لوحة التحكم: رفع صورة ${path}`),content:b64,branch:S.branch,...(sha?{sha}:{})})});
+  if(r.status===401)throw new Error('TOKEN');
+  if(!r.ok){const j=await r.json().catch(()=>null);throw new Error(`رفع ${path} فشل (${r.status})${j&&j.message?' — '+j.message:''}`)}
+}
+function friendly(m){
+  if(m.includes('(403)'))return m+' — التوكن لا يملك صلاحية الكتابة: فعّل Contents: Read and write';
+  if(m.includes('(409)'))return m+' — تعارض نسخة، أعد المحاولة';
+  return m;
 }
 
-/* ===== ★ الحفظ والنشر (نظام مكرونجي) ★ ===== */
-function setSaving(on){document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=on)}
+/* ===== ★ النشر ★ ===== */
 async function publish(newCfg){
-  if(publishBusy)return;
-  publishBusy=true;setSaving(true);
   try{
-    toast('⏳ جارٍ الحفظ والنشر...');
+    document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=true);
     newCfg._updated=Date.now();
     const fresh=await fetchIndex();
     const old=parseConfig(fresh.raw);
@@ -300,33 +283,26 @@ async function publish(newCfg){
     for(const p of Object.keys(pending))await putFile(p,pending[p]);
     pending={};
     const r=await api('index.html',{method:'PUT',body:JSON.stringify({message:'لوحة التحكم: حفظ ونشر تحديثات الموقع',content:b64enc(raw),sha:fresh.sha,branch:S.branch})});
-    if(r.status===401||r.status===403)throw new Error('TOKEN');
-    if(r.status===409)throw new Error('تعارض: تغيّر الملف أثناء الحفظ — اضغط حفظ مرة أخرى');
-    if(!r.ok){let m='';try{m=(await r.json()).message||''}catch(e){}throw new Error('الحفظ فشل ('+r.status+') '+m)}
-    const pj=await r.json().catch(()=>null);
+    if(r.status===401)throw new Error('TOKEN');
+    if(!r.ok){const j=await r.json().catch(()=>null);throw new Error('الحفظ فشل ('+r.status+')'+(j&&j.message?' — '+j.message:''))}
     await putFile('data/site.json',b64enc(JSON.stringify(newCfg,null,2)),'لوحة التحكم: تحديث ملف البث المباشر');
-    RAW=raw;SHA=(pj&&pj.content)?pj.content.sha:fresh.sha;CFG=newCfg;
+    RAW=raw;SHA=fresh.sha;CFG=newCfg;
     toast('✅ تم الحفظ والنشر — يصل الزوار تلقائياً بدون تحديث خلال ≤25 ثانية');
     renderAll();
   }catch(e){
-    if(e.message==='TOKEN'){retryFn=()=>publish(newCfg);showToken()}
-    else{toast('❌ '+e.message);console.error(e)}
-  }finally{publishBusy=false;setSaving(false)}
+    if(e.message==='TOKEN'){pendingPublish=newCfg;showTok()}
+    else{toast('❌ '+friendly(e.message));console.error(e)}
+  }finally{document.querySelectorAll('.savebar .btn-g').forEach(b=>b.disabled=false)}
 }
-
-/* ===== شاشة انتهاء التوكن ===== */
-function showToken(){$('#tokView').classList.add('on');$('#tkNew').value='';setTimeout(()=>$('#tkNew').focus(),60)}
-$('#tkSave').onclick=async()=>{
-  const t=$('#tkNew').value.trim();
-  if(!t){toast('❌ أدخل التوكن الجديد');return}
-  S.token=t;sessionStorage.setItem('ap',JSON.stringify(S));
+function showTok(){$('#tokView').classList.add('on');$('#tkNew').value='';setTimeout(()=>$('#tkNew').focus(),50)}
+$('#tkBtn').onclick=function(){
+  const v=$('#tkNew').value.trim();
+  if(!v){toast('❌ الصق التوكن الجديد أولاً');return}
+  S.token=v;sessionStorage.setItem('ap',JSON.stringify(S));
   $('#tokView').classList.remove('on');
-  const f=retryFn;retryFn=null;
-  if(f){f();return}
-  try{const fr=await fetchIndex();RAW=fr.raw;SHA=fr.sha;CFG=parseConfig(RAW);renderAll();toast('✅ تم تحديث التوكن بنجاح')}
-  catch(e2){if(e2.message==='TOKEN'){showToken()}else{toast('❌ '+e2.message)}}
+  if(pendingPublish){const p=pendingPublish;pendingPublish=null;toast('🔄 جارٍ المتابعة وإتمام الحفظ...');publish(p)}
+  else toast('✅ تم تحديث التوكن');
 };
-$('#tkExit').onclick=()=>{sessionStorage.clear();location.reload()};
 
 /* ===== أقسام اللوحة ===== */
 function renderIdentity(){
@@ -410,7 +386,7 @@ window.addSvc=()=>{collectServices();
   const ts=Date.now();
   CFG.services.push({id:'new'+ts,icon:'fas fa-hammer',title:'خدمة جديدة',desc:'وصف الخدمة...',img:`images/srv-${ts}.jpg`,v:'1',hidden:false});
   renderServices();toast('➕ أضفت خدمة — عدّل بياناتها وارفع صورتها ثم احفظ')};
-function saveServices(){collectServices();publish(structuredClone(CFG))}
+function saveServices(){collectServices();publish(clone(CFG))}
 window.saveServices=saveServices;
 
 function galRow(g,i){
@@ -482,7 +458,7 @@ window.moveGal=(i,d)=>{collectGallery();
 window.delGal=async i=>{collectGallery();
   if(!await confirmBox('حذف هذه الصورة من المعرض؟'))return;
   CFG.gallery.splice(i,1);renderGallery()};
-function saveGallery(){collectGallery();publish(structuredClone(CFG))}
+function saveGallery(){collectGallery();publish(clone(CFG))}
 window.saveGallery=saveGallery;
 
 function socRow(s,i){
@@ -503,7 +479,6 @@ function socRow(s,i){
 }
 function renderContact(){
   const c=CFG.contact;
-  /* ✅ إصلاح: السوشيال مخزّن في CFG.social (أعلى مستوى) وليس داخل contact */
   $('#sec-contact').innerHTML=`
   <div class="card"><h3><i class="fas fa-headset"></i> وسائل الاتصال</h3>
     <div class="hint">واتساب: مفتاح الدولة ثم الرقم بدون + وبدون صفر بداية — مثال 9665XXXXXXXX</div>
@@ -550,7 +525,7 @@ function collectContact(){
   CFG.social=CFG.social||[];
   $('#socList').querySelectorAll('.item').forEach(it=>{
     const i=+it.dataset.i;
-    if(CFG.social[i])CFG.social[i].url=it.querySelector('[data-f="url"]').value;
+    CFG.social[i].url=it.querySelector('[data-f="url"]').value;
   });
 }
 window.addEx=()=>{collectContact();CFG.contact.extra.push({type:'instagram',label:'انستقرام',value:'https://'});renderContact()};
@@ -569,7 +544,7 @@ window.moveSoc=(i,d)=>{collectContact();
 window.delSoc=async i=>{collectContact();
   if(!await confirmBox('حذف هذا الحساب؟'))return;
   CFG.social.splice(i,1);renderContact()};
-function saveContact(){collectContact();publish(structuredClone(CFG))}
+function saveContact(){collectContact();publish(clone(CFG))}
 window.saveContact=saveContact;
 
 function renderTexts(){
@@ -597,7 +572,7 @@ function saveTexts(){
     CFG.about.stats[i].n=+it.querySelector('[data-f="n"]').value||0;
     CFG.about.stats[i].l=it.querySelector('[data-f="l"]').value;
   });
-  publish(structuredClone(CFG));
+  publish(clone(CFG));
 }
 window.saveTexts=saveTexts;
 
@@ -617,7 +592,7 @@ function renderWa(){
 }
 function saveWa(){
   CFG.waMsg={greeting:$('#wG').value,sign:$('#wS').value,close:$('#wC').value};
-  publish(structuredClone(CFG));
+  publish(clone(CFG));
 }
 window.saveWa=saveWa;
 
@@ -629,7 +604,7 @@ function saveIdentity(){
   CFG.waMsg.sign='أ: '+CFG.brand.name;
   const ys=CFG.about.stats.find(s=>s.l.includes('سنوات خبرة'));
   if(ys)ys.n=+CFG.brand.exp||0;
-  publish(structuredClone(CFG));
+  publish(clone(CFG));
 }
 window.saveIdentity=saveIdentity;
 
@@ -644,23 +619,25 @@ $('#btnExport').onclick=()=>{
 };
 $('#btnReload').onclick=async()=>{
   try{const f=await fetchIndex();RAW=f.raw;SHA=f.sha;CFG=parseConfig(RAW);renderAll();toast('🔄 تم التحديث من المستودع')}
-  catch(e){if(e.message==='TOKEN'){showToken()}else{toast('❌ '+e.message)}}
+  catch(e){if(e.message==='TOKEN')showTok();else toast('❌ '+friendly(e.message))}
 };
 $('#tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab');if(!t)return;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
   ['identity','services','gallery','contact','texts','wamsg'].forEach(k=>{$('#sec-'+k).style.display=(k===t.dataset.t)?'':'none'});
 });
-$('#helpToggle').onclick=()=>$('#helpBox').classList.toggle('on');
+$('#liHelp').onclick=()=>{$('#liHelpTxt').hidden=!$('#liHelpTxt').hidden};
 
-/* ===== تسجيل الدخول (مثل الصورة: حقلان فقط) ===== */
+function parseCreds(u){
+  u=u.trim();
+  if(u.includes('/')){const p=u.split('/');return{owner:p[0]||'alashry1',repo:p[1]||'alashry'}}
+  if(u==='alashry')return{owner:'alashry1',repo:'alashry'};
+  return{owner:u,repo:'alashry'};
+}
 $('#loginForm').onsubmit=async e=>{
   e.preventDefault();
-  const u=$('#liUser').value.trim();
-  let owner=DEF.owner,repo=DEF.repo;
-  if(u.includes('/')){const p=u.split('/');owner=p[0]||owner;repo=p[1]||repo}
-  else if(u&&u!==repo){owner=u}
-  S={owner,repo,branch:DEF.branch,token:$('#liToken').value.trim()};
+  const cr=parseCreds($('#liUser').value);
+  S={owner:cr.owner,repo:cr.repo,branch:'main',token:$('#liPass').value.trim()};
   $('#liBtn').innerHTML='<span class="spin"></span> جارٍ التحقق...';
   try{
     const f=await fetchIndex();
@@ -668,8 +645,7 @@ $('#loginForm').onsubmit=async e=>{
     sessionStorage.setItem('ap',JSON.stringify(S));
     enterApp();
   }catch(err){
-    if(err.message==='TOKEN')toast('❌ كلمة السر (التوكن) غير صالحة أو منتهية — راجع شرح «كيف أنشئ التوكن؟»');
-    else toast('❌ تعذر الاتصال — تحقق من اسم المستخدم والإنترنت');
+    toast('❌ '+(err.message==='TOKEN'?'كلمة السر (التوكن) غير صالحة أو منتهية':err.message==='NOTFOUND'?'لم يُعثر على المستودع — تحقق من اسم المستخدم':'تعذر الاتصال — تحقق من الإنترنت'));
     $('#liBtn').textContent='دخول';
   }
 };
