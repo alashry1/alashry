@@ -1,4 +1,4 @@
-<!-- admin v3.2-2026-09-19 -->
+<!-- admin v3.3-2026-09-19 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -93,7 +93,7 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 
 <div id="appView" style="display:none">
   <div class="topbar">
-    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.2</span></span>
+    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.3</span></span>
     <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
     <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
     <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -351,11 +351,9 @@ function renderIdentity(){
       <div class="fg"><label>صورة البروفايل الحالية</label><img src="images/profile.jpg?v=${b.profileV||1}" style="border-radius:10px;max-height:90px" onerror="this.style.display='none'"></div>
     </div>
     <div class="fg"><label>رفع صورة شخصية جديدة</label><input type="file" accept="image/*" id="iProfile"></div>
-    <div class="fg"><label>رفع بانر مشاركة واتساب جديد</label><input type="file" accept="image/*" id="iBanner"></div>
   </div>
   <div class="savebar"><button class="btn btn-g" onclick="saveIdentity()">💾 حفظ ونشر الهوية</button></div>`;
   $('#iProfile').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1200,.82);pending['images/profile.jpg']=r.b64;CFG.brand.profileV=Date.now();toast('📎 الصورة جاهزة — اضغط حفظ ونشر')};
-  $('#iBanner').onchange=async e=>{if(!e.target.files[0])return;const r=await compress(e.target.files[0],1600,.82);pending['images/og-banner.jpg']=r.b64;toast('📎 البانر جاهز — اضغط حفظ ونشر')};
 }
 function svcRow(s,i){
   return `<div class="item" data-i="${i}">
