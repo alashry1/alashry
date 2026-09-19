@@ -1,3 +1,4 @@
+<!-- admin v3.0-2026-09-19 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -33,6 +34,7 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
 .login-card .btn-y{border-radius:14px;padding:14px}
 .li-help{display:block;margin:14px auto 0;background:none;border:none;color:var(--muted);font-size:.78rem;text-decoration:underline}
 .li-txt{font-size:.75rem;color:var(--muted);margin-top:8px;background:var(--brand-soft);border:1px solid #F0DDBE;border-radius:10px;padding:8px 12px}
+#selfTest{font-size:.75rem;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:10px}
 .topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .topbar .t{font-weight:700;display:flex;align-items:center;gap:8px;margin-inline-end:auto}
 .topbar .t i{color:var(--brand)}
@@ -75,14 +77,15 @@ label{font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-b
     <div class="fg"><label>اسم المستخدم</label><input id="liUser" required placeholder="اسم المالك أو المستودع" autocomplete="username"></div>
     <div class="fg"><label>كلمة السر</label><input id="liPass" type="password" required placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn btn-y" style="width:100%" id="liBtn">دخول</button>
+    <div id="selfTest">⏳ جارٍ الفحص الذاتي للوحة...</div>
     <button type="button" class="li-help" id="liHelp">كيف أنشئ كلمة السر (التوكن)؟</button>
-    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).</p>
+    <p class="li-txt" id="liHelpTxt" hidden>GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token → المستودع: alashry فقط → صلاحية Contents: Read and write → انسخ التوكن والصقه هنا ككلمة سر.<br>اسم المستخدم: <b>alashry1</b> (أو alashry1/alashry).<br>الإصدار: 3.0 — 19 سبتمبر 2026</p>
   </form>
 </div>
 
 <div id="appView" style="display:none">
   <div class="topbar">
-    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري</span>
+    <span class="t"><i class="fas fa-helmet-safety"></i> لوحة تحكم العشري <span style="font-size:.65rem;color:var(--muted)">v3.0</span></span>
     <button class="btn btn-o btn-s" id="btnExport"><i class="fas fa-download"></i> تصدير احتياطي</button>
     <button class="btn btn-o btn-s" id="btnReload"><i class="fas fa-rotate"></i> تحديث من المستودع</button>
     <button class="btn btn-r btn-s" id="btnLogout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -127,7 +130,6 @@ var pending={};
 var pendingPublish=null;
 
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},4000)}
-/* ★ ملتقط الأخطاء العام: لا صمت بعد اليوم — أي عطل يظهر رسالة ★ */
 window.addEventListener('error',function(e){try{toast('❌ خطأ: '+(e.message||'غير متوقع'))}catch(_){}});
 function confirmBox(msg){return new Promise(function(res){
   $('#modalMsg').textContent=msg;$('#modal').classList.add('on');
@@ -253,9 +255,9 @@ async function putFile(path,b64,msg){
   const g=await api(path+'?ref='+S.branch);
   if(g.status===401)throw new Error('TOKEN');
   if(g.ok)sha=(await g.json()).sha;
-  const r=await api(path,{method:'PUT',body:JSON.stringify({message:msg||(`لوحة التحكم: رفع صورة ${path}`),content:b64,branch:S.branch,...(sha?{sha}:{})})});
+  const r=await api(path,{method:'PUT',body:JSON.stringify(Object.assign({message:msg||('لوحة التحكم: رفع صورة '+path),content:b64,branch:S.branch},sha?{sha}:{}))});
   if(r.status===401)throw new Error('TOKEN');
-  if(!r.ok){const j=await r.json().catch(()=>null);throw new Error(`رفع ${path} فشل (${r.status})${j&&j.message?' — '+j.message:''}`)}
+  if(!r.ok){const j=await r.json().catch(()=>null);throw new Error('رفع '+path+' فشل ('+r.status+')'+(j&&j.message?' — '+j.message:''))}
 }
 function friendly(m){
   if(m.includes('(403)'))return m+' — التوكن لا يملك صلاحية الكتابة: فعّل Contents: Read and write';
@@ -272,7 +274,7 @@ async function publish(newCfg){
     const old=parseConfig(fresh.raw);
     let raw=fresh.raw;
     const reps=[[old.brand.name,newCfg.brand.name],[old.contact.phone,newCfg.contact.phone],[old.contact.wa,newCfg.contact.wa],[old.contact.email,newCfg.contact.email],[old.brand.tagline,newCfg.brand.tagline]];
-    reps.forEach(([o,n])=>{if(o&&n&&o!==n)raw=raw.split(o).join(n)});
+    reps.forEach(function(pr){const o=pr[0],n=pr[1];if(o&&n&&o!==n)raw=raw.split(o).join(n)});
     raw=setRegion(raw,'CONFIG',configInner(newCfg));
     raw=setRegion(raw,'HERO',genHero(newCfg));
     raw=setRegion(raw,'SERVICES',genServices(newCfg));
@@ -384,7 +386,7 @@ window.delSvc=async i=>{collectServices();
   CFG.services.splice(i,1);renderServices()};
 window.addSvc=()=>{collectServices();
   const ts=Date.now();
-  CFG.services.push({id:'new'+ts,icon:'fas fa-hammer',title:'خدمة جديدة',desc:'وصف الخدمة...',img:`images/srv-${ts}.jpg`,v:'1',hidden:false});
+  CFG.services.push({id:'new'+ts,icon:'fas fa-hammer',title:'خدمة جديدة',desc:'وصف الخدمة...',img:'images/srv-'+ts+'.jpg',v:'1',hidden:false});
   renderServices();toast('➕ أضفت خدمة — عدّل بياناتها وارفع صورتها ثم احفظ')};
 function saveServices(){collectServices();publish(clone(CFG))}
 window.saveServices=saveServices;
@@ -446,7 +448,7 @@ window.addGal=async()=>{
   if(!f||!$('#nCap').value){toast('❌ اختر صورة واكتب تعليقاً');return}
   collectGallery();
   const r=await compress(f);
-  const path=`images/gal-${Date.now()}.jpg`;
+  const path='images/gal-'+Date.now()+'.jpg';
   pending[path]=r.b64;
   CFG.gallery.push({cap:$('#nCap').value,tag:$('#nTag').value||'عام',img:path,v:'1'});
   renderGallery();toast('➕ أُضيفت للقائمة — اضغط حفظ ونشر');
@@ -587,7 +589,7 @@ function renderWa(){
     <pre id="wPrev" style="background:var(--dark);color:#E8E6E1;border-radius:12px;padding:14px;font-family:inherit;font-size:.85rem;white-space:pre-wrap"></pre>
   </div>
   <div class="savebar"><button class="btn btn-g" onclick="saveWa()"><i class="fas fa-save"></i> حفظ ونشر الرسائل</button></div>`;
-  const upd=()=>{$('#wPrev').textContent=`${$('#wG').value}\n\n${$('#wS').value}\n\nأرغب بطلب الخدمة التالية:\n🛠️ الخدمة: عمال لياسة\n📋 الوصف: ...\n\n📍 الموقع: ...\n📅 موعد المعاينة: ...\n\n${$('#wC').value}`};
+  const upd=()=>{$('#wPrev').textContent=$('#wG').value+'\n\n'+$('#wS').value+'\n\nأرغب بطلب الخدمة التالية:\n🛠️ الخدمة: عمال لياسة\n📋 الوصف: ...\n\n📍 الموقع: ...\n📅 موعد المعاينة: ...\n\n'+$('#wC').value};
   ['wG','wS','wC'].forEach(id=>$('#'+id).addEventListener('input',upd));upd();
 }
 function saveWa(){
@@ -628,9 +630,27 @@ $('#tabs').addEventListener('click',e=>{
 });
 $('#liHelp').onclick=()=>{$('#liHelpTxt').hidden=!$('#liHelpTxt').hidden};
 
+/* ★ الفحص الذاتي: اللوحة تفحص نفسها أمامك عند الفتح ★ */
+(async function selfTest(){
+  const el=$('#selfTest');
+  const out=['✅ الجافاسكربت يعمل — الإصدار 3.0'];
+  try{
+    const r=await fetch('index.html?selftest='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error(r.status);
+    const t=await r.text();
+    out.push(t.indexOf('EDIT:CONFIG:START')>-1?'✅ index.html سليم: المناطق المُعلَّمة موجودة':'❌ index.html بلا مناطق مُعلَّمة');
+    out.push(t.indexOf('site-config')>-1?'✅ إعدادات الموقع موجودة':'❌ إعدادات الموقع مفقودة');
+  }catch(e){out.push('❌ تعذر قراءة index.html ('+e.message+') — افتح اللوحة من رابط الموقع لا من ملف محلي')}
+  try{
+    const r2=await fetch('data/site.json?t='+Date.now(),{cache:'no-store'});
+    out.push(r2.ok?'✅ ملف البث المباشر موجود':'⚠️ ملف البث غير موجود — سيُنشأ عند أول حفظ');
+  }catch(e){out.push('⚠️ تعذر فحص ملف البث')}
+  el.innerHTML=out.join('<br>');
+})();
+
 function parseCreds(u){
   u=u.trim();
-  if(u.includes('/')){const p=u.split('/');return{owner:p[0]||'alashry1',repo:p[1]||'alashry'}}
+  if(u.indexOf('/')>-1){const p=u.split('/');return{owner:p[0]||'alashry1',repo:p[1]||'alashry'}}
   if(u==='alashry')return{owner:'alashry1',repo:'alashry'};
   return{owner:u,repo:'alashry'};
 }
